@@ -35,32 +35,63 @@ body {
       width: 270px;
       height: 100%;
       border-right: solid 1px #ccc; }
-      .container .container-body .side-list .filter {
+      .container .container-body .side-list .filter-wrapper {
         height: 35px;
-        border-bottom: solid 1px #ccc; }
+        border-bottom: solid 1px #ccc;
+        display: flex;
+        align-items: center;
+        padding: 10px; }
+        .container .container-body .side-list .filter-wrapper .filter-box {
+          display: flex;
+          color: #979797;
+          margin-right: 12px; }
+          .container .container-body .side-list .filter-wrapper .filter-box .radio {
+            font-size: 16px; }
+          .container .container-body .side-list .filter-wrapper .filter-box .text {
+            font-size: 11px;
+            line-height: 16px;
+            text-indent: 2px; }
       .container .container-body .side-list .item-list {
         height: calc(100% - 35px);
         overflow-y: scroll; }
-        .container .container-body .side-list .item-list::-webkit-scrollbar {
-          width: 3px; }
         .container .container-body .side-list .item-list::-webkit-scrollbar-thumb {
+          width: 3px;
           background-color: #ccc;
           border-radius: 5px;
           border: none; }
-        .container .container-body .side-list .item-list .item {
-          height: 80px;
-          border-bottom: solid 1px #ccc;
-          padding: 10px; }
-          .container .container-body .side-list .item-list .item .title {
-            color: #0071bc;
-            height: 40px; }
-          .container .container-body .side-list .item-list .item .author {
-            font-size: 11px;
-            color: #333; }
+        .container .container-body .side-list .item-list .cluster .cluster-title {
+          height: 36px;
+          font-size: 11px;
+          color: #4a4a4a;
+          border-bottom: solid 1px #d8d8d8;
+          padding: 10px;
+          position: relative; }
+          .container .container-body .side-list .item-list .cluster .cluster-title .arrow {
+            position: absolute;
+            right: 5px;
+            font-size: 18px;
+            top: calc(50% - 9px);
+            transition: all .3s; }
+        .container .container-body .side-list .item-list .cluster .cluster-body {
+          display: none; }
+          .container .container-body .side-list .item-list .cluster .cluster-body .item {
+            height: 80px;
+            padding: 10px;
+            border-bottom: solid 1px #ccc; }
+            .container .container-body .side-list .item-list .cluster .cluster-body .item .title {
+              color: #0071bc;
+              height: 40px; }
+            .container .container-body .side-list .item-list .cluster .cluster-body .item .author {
+              font-size: 11px;
+              color: #333; }
+        .container .container-body .side-list .item-list:hover .cluster-title .arrow {
+          transform: rotate(180deg); }
+        .container .container-body .side-list .item-list:hover .cluster-body {
+          display: block; }
     .container .container-body .main {
       flex: 12; }
     .container .container-body .side-info {
-      width: 300px;
+      width: 400px;
       height: 100%;
       border-left: solid 1px #ccc; }
 
@@ -69,12 +100,33 @@ body {
   .flex-wrapper .empty {
     flex: 12; }
 
-svg {
+svg#renderer {
+  width: 100%;
+  height: 100%;
   margin: 0; }
 
-#renderer {
-  width: 100%;
-  height: 100%; }
+.main {
+  position: relative; }
+  .main .guide {
+    position: absolute;
+    bottom: 0;
+    width: 160px;
+    height: 60px; }
+  .main .node-guide {
+    left: 0; }
+  .main .line-guide {
+    right: 0; }
+    .main .line-guide .line-wrapper {
+      display: flex; }
+      .main .line-guide .line-wrapper .line {
+        width: 30px;
+        height: 7px;
+        border-bottom: solid 1px #979797; }
+      .main .line-guide .line-wrapper .genealogy {
+        border-bottom: solid 3px #979797; }
+      .main .line-guide .line-wrapper .text {
+        text-indent: 5px;
+        font-size: 10px; }
 
 .test {
   border: solid 1px #ccc; }
