@@ -1,0 +1,89 @@
+*
+  box-sizing: border-box
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700')
+
+body
+  font: 13px 'Roboto', sans-serif
+  margin: 0
+
+$header-height: 60px
+
+.container
+  width: 100%
+  height: 100vh
+  overflow: hidden
+  .header
+    width: 100%
+    height: $header-height
+    align-items: center
+    .logo
+      width: 40px
+      height: 40px
+      background-color: rebeccapurple
+    .search-input
+      width: 350px
+      height: 40px
+      outline: none
+      border-radius: 3px
+      border: solid 1px #ccc
+      text-indent: 10px
+      font: 12px 'Roboto', sans-serif
+      color: #999
+
+  .container-body
+    width: 100%
+    height: calc(100vh - #{$header-height})
+    display: flex
+    .side-list
+      width: 270px
+      height: 100%
+      border-right: solid 1px #ccc
+      .filter
+        height: 35px
+        border-bottom: solid 1px #ccc
+      .item-list
+        height: calc(100% - 35px)
+        overflow-y: scroll
+        &::-webkit-scrollbar
+          width: 3px
+        &::-webkit-scrollbar-thumb
+          background-color: #ccc
+          border-radius: 5px
+          border: none
+
+        .item
+          height: 80px
+          border-bottom: solid 1px #ccc
+          padding: 10px
+          .title
+            color: #0071bc
+            height: 40px
+          .author
+            font-size: 11px
+            color: #333
+
+    .main
+      flex: 12
+    .side-info
+      width: 300px
+      height: 100%
+      border-left: solid 1px #ccc
+
+.flex-wrapper
+  display: flex
+  .empty
+    flex: 12
+
+
+svg
+  margin: 0
+
+#renderer
+  width: 100%
+  height: 100%
+  //background-color: #aaaaaa
+
+.test
+  border: solid 1px #ccc
+
