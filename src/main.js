@@ -19,7 +19,7 @@ polar.drawAxis();
 
 _.forEach(yearMap,(e,i)=>{
     if(i%5===0)
-        polar.drawCircle(e, '#333', i);
+        polar.drawCircle(e, '#333');
     else
         polar.drawCircle(e);
 });

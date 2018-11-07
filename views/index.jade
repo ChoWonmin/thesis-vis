@@ -9,14 +9,33 @@ block content
             .empty
         .container-body
             .side-list
-                .filter
+                .filter-wrapper
+                    .filter-box
+                        i.material-icons.radio radio_button_unchecked
+                        .text Group
+                    .filter-box
+                        i.material-icons.radio radio_button_checked
+                        .text Conference
                 .item-list
-                    each i in [1,2,3,4,5,6,7,8,10,11,12,13,14,15]
-                        .item
-                            .title Arcs, Angles, or Areas : Individual Data Encodings in Pie and Donut...
-                            .author 2016, Drew Skau, Robert Kosara
+                    each i in [1, 2, 3, 4]
+                        .cluster
+                            .cluster-title Group#{i}
+                                i.material-icons.arrow keyboard_arrow_down
+                            .cluster-body
+                                each j in [1,2,3,4]
+                                    .item
+                                        .title Arcs, Angles, or Areas : Individual Data Encodings in Pie and Donut...
+                                        .author 2016, Drew Skau, Robert Kosara
             .main
                 svg#renderer
+                    .node-guide.guide
+                    .line-guide.guide
+                        .line-wrapper
+                            .line
+                            .text Citation Relation
+                        .line-wrapper
+                            .line.genealogy
+                            .text Genealogy Relation
             .side-info
 
     script(src="data/data.js")
