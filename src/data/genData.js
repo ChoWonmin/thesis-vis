@@ -58,7 +58,14 @@ _.forEach(data, (e, i) => {
   }
 });
 
-fs.writeFile('./out.json', JSON.stringify(data), function (err) {
-    if (err) throw err;
-    console.log('Saved!');
+console.log(data);
+
+fs.writeFile('./data.js', JSON.stringify(data), function (err) {
+  if (err) throw err;
+  console.log('Saved!');
 });
+
+// fs.writeFile('./data.js', 'const data = {'+JSON.stringify(data) + '};', function (err) {
+//     if (err) throw err;
+//     console.log('Saved!');
+// });

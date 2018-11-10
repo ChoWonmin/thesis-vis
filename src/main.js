@@ -1,7 +1,7 @@
 console.log(data);
 const polar = new Polar(d3.select('#renderer'));
 
-let target = _.filter(data, e=> e.year>=2000);
+let target = data;
 
 let yearMap = [];
 for (let i=2000; i<2016; i++)
@@ -29,9 +29,12 @@ const colorMap = {
     1: '#bee8ad',
     2: '#89c3ff',
     3: '#5041ff',
+    4: '#ffbc73',
+};
 
-}
-
-_.forEach(target, e=>{
-    polar.drawNode(yearMap[e.year], Math.random()*360, {color:colorMap[parseInt(Math.random()*4)]});
+_.forEach(target, e => {
+    const diffAngle = 2*Math.PI/5;
+    let angle = diffAngle * e.cluster;
+    let scatter = diffAngle * (Math.random() - 0.5);
+    polar.drawNode(yearMap[e.year], angle + scatter, {color:colorMap[e.cluster]});
 });
