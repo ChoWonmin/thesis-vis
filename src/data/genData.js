@@ -5,6 +5,7 @@ const data = {};
 
 for (let i=0; i<350; i++) {
   data[i] = {
+    id: i,
     year: 2000,
     references: [],
     cluster: parseInt(Math.random()*5)

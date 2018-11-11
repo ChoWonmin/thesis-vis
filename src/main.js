@@ -55,17 +55,32 @@ function normalizeAngle(angle) {
   return angle;
 }
 
-function update() {
-
+function collide(collision) {
   _.forEach(nodes, src => {
     _.forEach(nodesGroupByYear[src.year], dest => {
       const distance = Math.abs(src.angle - dest.angle);
 
-      if (distance <= 0.3 && distance!==0) {
+      if (src.id === dest.id)
+        return;
+
+      if (distance <= collision) {
         if (src.angle <= dest.angle) {
+          src.angle = normalizeAngle(src.angle - 0.01);
           dest.angle = normalizeAngle(dest.angle + 0.01);
         } else if (src.angle > dest.angle) {
+          src.angle = normalizeAngle(src.angle + 0.01);
           dest.angle = normalizeAngle(dest.angle - 0.01);
+        }
+      }
+
+
+      if (distance >= 2*Math.PI - collision) {
+        if (src.angle <= dest.angle) {
+          src.angle = normalizeAngle(src.angle + 0.01);
+          dest.angle = normalizeAngle(dest.angle - 0.01);
+        } else if (src.angle > dest.angle) {
+          src.angle = normalizeAngle(src.angle - 0.01);
+          dest.angle = normalizeAngle(dest.angle + 0.01);
         }
       }
 
@@ -75,7 +90,6 @@ function update() {
 
 function render() {
   _.forEach(nodes, e => {
-    // if (e.angle > Math.PI *2) console.log(e.angle);
     polar.drawNode(e.radius, e.angle, {color:e.color});
   });
 }
@@ -85,13 +99,11 @@ function animate() {
 
   polar.clear();
 
-  update();
+  collide(0.1);
 
   render();
 
 };
 
-// animate();
+animate();
 // render();
-
-console.log(nodesGroupByYear);
