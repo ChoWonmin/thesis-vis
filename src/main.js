@@ -31,8 +31,9 @@ const colorMap = {
     4: '#ffbc73',
 };
 
+const diffAngle = 2*Math.PI/5;
+
 const nodes = _.forEach(target, e => {
-    const diffAngle = 2*Math.PI/5;
     let angle = diffAngle * e.cluster + diffAngle * (Math.random() - 0.5);
 
     e.radius = yearMap[e.year];
@@ -42,10 +43,8 @@ const nodes = _.forEach(target, e => {
 
 const nodesGroupByYear = {};
 for (let i=2000; i<2017; i++) {
-  nodesGroupByYear[i] = _.filter(nodes, e => e.year === i);
+  nodesGroupByYear[i] = _.chain(nodes).filter(e => e.year === i).orderBy(['cluster']).value();
 }
-
-console.log(nodesGroupByYear);
 
 function normalizeAngle(angle) {
   if (angle < 0)
@@ -64,33 +63,24 @@ function collide(collision) {
       let theta = Math.abs(src.angle - dest.angle);
 
       if ((2*Math.PI - theta)* yearMap[src.year] <= collision) {
-        if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle + 0.01);
-          dest.angle = normalizeAngle(dest.angle - 0.01);
-        } else if (src.angle > dest.angle) {
-          src.angle = normalizeAngle(src.angle - 0.01);
-          dest.angle = normalizeAngle(dest.angle + 0.01);
-        }
+        src.angle = (src.angle <= dest.angle)?normalizeAngle(src.angle + 0.01):normalizeAngle(src.angle - 0.01);
+        dest.angle = (src.angle <= dest.angle)?normalizeAngle(dest.angle - 0.01):normalizeAngle(dest.angle + 0.01);
+
         return;
       }
 
       const length = theta * yearMap[src.year];
 
       if (length <= collision) {
-        if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle - 0.01);
-          dest.angle = normalizeAngle(dest.angle + 0.01);
-        } else if (src.angle > dest.angle) {
-          src.angle = normalizeAngle(src.angle + 0.01);
-          dest.angle = normalizeAngle(dest.angle - 0.01);
-        }
+        src.angle = (src.angle <= dest.angle)?normalizeAngle(src.angle - 0.01):normalizeAngle(src.angle + 0.01);
+        dest.angle = (src.angle <= dest.angle)?normalizeAngle(dest.angle + 0.01):normalizeAngle(dest.angle - 0.01);
       }
 
     });
   });
 }
 
-function render() {
+function render(nodes) {
   _.forEach(nodes, e => {
     polar.drawNode(e.radius, e.angle, {color:e.color});
   });
@@ -103,10 +93,25 @@ function animate() {
 
   collide(20);
 
-  render();
+  render(nodes);
 
 };
 
-console.log(yearMap);
+// animate();
 
-animate();
+for (let i=2000; i<2017; i++) {
+  const len = nodesGroupByYear[i].length;
+  _.forEach(nodesGroupByYear[i], (e, j) => {
+    let angle = diffAngle * e.cluster + diffAngle/len*j;
+
+    e.radius = yearMap[e.year];
+    e.angle = normalizeAngle(angle);
+    e.color = colorMap[e.cluster];
+
+    polar.drawNode(e.radius, e.angle, {color: e.color});
+
+  })
+}
+
+console.log(nodesGroupByYear);
+
