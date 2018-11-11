@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const data = {};
 
-for (let i=0; i<300; i++) {
+for (let i=0; i<350; i++) {
   data[i] = {
     year: 2000,
     references: [],
@@ -11,7 +11,7 @@ for (let i=0; i<300; i++) {
   };
 }
 
-for (let i=5; i<300; i++) {
+for (let i=5; i<350; i++) {
   if (i<10)
     data[i]['year'] = 2001;
   else if (i<15)
@@ -50,22 +50,15 @@ _.forEach(data, (e, i) => {
   const len = parseInt(i/15)+1;
   for (let j=0; j<len; j++) {
     let value = i - parseInt(Math.random()*i);
-    let isFind = _.find(e['references'], e => e===value);
+    let isValid = _.find(e['references'], e => e===value) || e===value;
 
-    if (!isFind) {
+    if (!isValid) {
       e['references'].push(value);
     }
   }
 });
 
-console.log(data);
-
 fs.writeFile('./data.js', JSON.stringify(data), function (err) {
   if (err) throw err;
   console.log('Saved!');
 });
-
-// fs.writeFile('./data.js', 'const data = {'+JSON.stringify(data) + '};', function (err) {
-//     if (err) throw err;
-//     console.log('Saved!');
-// });

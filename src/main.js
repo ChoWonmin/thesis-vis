@@ -1,4 +1,5 @@
 console.log(data);
+
 const polar = new Polar(d3.select('#renderer'));
 
 let target = data;
@@ -41,56 +42,46 @@ const nodes = _.forEach(target, e => {
     e.color = colorMap[e.cluster];
 });
 
-console.log(nodes);
+const nodesGroupByYear = {};
+for (let i=2000; i<2017; i++) {
+  nodesGroupByYear[i] = _.filter(nodes, e => e.year === i);
+}
+
+function update() {
+  _.forEach(nodes, src => {
+    _.forEach(nodesGroupByYear[src.year], dest => {
+      const distance = Math.abs(src.angle - dest.angle);
+
+      if (distance <= 0.005) {
+
+        if (src.angle <= dest.angle) {
+          src.anlge = src.angle - 0.1;
+          dest.anlge = dest.anlge + 0.1;
+        } else if (src.angle > dest.angle) {
+          src.anlge = src.angle + 0.1;
+          dest.anlge = dest.anlge - 0.1;
+        }
+      }
+
+    });
+  });
+}
+
+function render() {
+  _.forEach(nodes, e => {
+    polar.drawNode(e.radis, e.angle, {color:e.color});
+  });
+}
 
 function animate() {
   requestAnimationFrame( animate );
 
   polar.clear();
 
-  _.forEach(nodes, src => {
-    _.forEach(nodes, dest => {
-      const distance = Math.abs(src.angle - dest.angle);
+  update();
 
-      if (distance < 0.01) {
-        if (src.angle < dest.angle) {
-          src.anlge -= 1;
-          dest.anlge += 1;
-        } else if (src.angle < dest.angle) {
-          src.anlge +=  0.1;
-          dest.anlge -=  0.1;
-        }
+  render();
 
-      }
-    });
-
-    polar.drawNode(src.radis, src.angle, {color:src.color});
-  });
 };
 
-// animate();
-
-_.forEach(nodes, src => {
-  _.forEach(nodes, dest => {
-    const distance = Math.abs(src.angle - dest.angle);
-
-    if (distance < 0.05) {
-      console.log('distance',distance);
-
-      if (isNaN(src.anlge))
-          console.log(src);
-
-      if (src.angle < dest.angle) {
-        src.anlge = src.angle - 0.1;
-        dest.anlge = dest.anlge + 0.1;
-      } else if (src.angle > dest.angle) {
-        src.anlge = src.angle + 0.1;
-        dest.anlge = dest.anlge - 0.1;
-      }
-
-    }
-  });
-
-  polar.drawNode(src.radis, src.angle, {color:src.color});
-});
-
+animate();
