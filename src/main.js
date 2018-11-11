@@ -32,9 +32,65 @@ const colorMap = {
     4: '#ffbc73',
 };
 
-_.forEach(target, e => {
+const nodes = _.forEach(target, e => {
     const diffAngle = 2*Math.PI/5;
-    let angle = diffAngle * e.cluster;
-    let scatter = diffAngle * (Math.random() - 0.5);
-    polar.drawNode(yearMap[e.year], angle + scatter, {color:colorMap[e.cluster]});
+    let angle = diffAngle * e.cluster + diffAngle * (Math.random() - 0.5);
+
+    e.radis = yearMap[e.year];
+    e.angle = angle;
+    e.color = colorMap[e.cluster];
 });
+
+console.log(nodes);
+
+function animate() {
+  requestAnimationFrame( animate );
+
+  polar.clear();
+
+  _.forEach(nodes, src => {
+    _.forEach(nodes, dest => {
+      const distance = Math.abs(src.angle - dest.angle);
+
+      if (distance < 0.01) {
+        if (src.angle < dest.angle) {
+          src.anlge -= 1;
+          dest.anlge += 1;
+        } else if (src.angle < dest.angle) {
+          src.anlge +=  0.1;
+          dest.anlge -=  0.1;
+        }
+
+      }
+    });
+
+    polar.drawNode(src.radis, src.angle, {color:src.color});
+  });
+};
+
+// animate();
+
+_.forEach(nodes, src => {
+  _.forEach(nodes, dest => {
+    const distance = Math.abs(src.angle - dest.angle);
+
+    if (distance < 0.05) {
+      console.log('distance',distance);
+
+      if (isNaN(src.anlge))
+          console.log(src);
+
+      if (src.angle < dest.angle) {
+        src.anlge = src.angle - 0.1;
+        dest.anlge = dest.anlge + 0.1;
+      } else if (src.angle > dest.angle) {
+        src.anlge = src.angle + 0.1;
+        dest.anlge = dest.anlge - 0.1;
+      }
+
+    }
+  });
+
+  polar.drawNode(src.radis, src.angle, {color:src.color});
+});
+

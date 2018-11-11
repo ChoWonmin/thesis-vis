@@ -97,5 +97,10 @@ Polar.prototype = {
         .text(text)
     }
 
+  },
+
+  clear: function () {
+    this.activeG.selectAll('*').remove();
   }
+
 };
