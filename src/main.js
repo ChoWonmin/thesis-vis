@@ -6,8 +6,8 @@ let yearMap = [];
 for (let i=2000; i<2017; i++)
     yearMap.push(i);
 
-const diffCircle = polar.height/42;
-const padding = 10;
+const diffCircle = polar.height/44;
+const padding = 5;
 
 yearMap = _.reduce(yearMap, (ac,e)=> {
     ac[e] = (e-2000+5)*diffCircle + padding;
@@ -36,7 +36,7 @@ const nodes = _.forEach(target, e => {
     let angle = diffAngle * e.cluster + diffAngle * (Math.random() - 0.5);
 
     e.radius = yearMap[e.year];
-    e.angle = angle;
+    e.angle = normalizeAngle(angle);
     e.color = colorMap[e.cluster];
 });
 
@@ -45,24 +45,27 @@ for (let i=2000; i<2017; i++) {
   nodesGroupByYear[i] = _.filter(nodes, e => e.year === i);
 }
 
-function update() {
+console.log(nodesGroupByYear);
 
-  // _.forEach(nodes, e=> {
-  //   e.angle += 0.2;
-  // });
+function normalizeAngle(angle) {
+  if (angle < 0)
+    return Math.PI * 2 + angle;
+  else if (angle > 2 * Math.PI)
+    return angle - 2 * Math.PI;
+  return angle;
+}
+
+function update() {
 
   _.forEach(nodes, src => {
     _.forEach(nodesGroupByYear[src.year], dest => {
       const distance = Math.abs(src.angle - dest.angle);
 
-      if (distance <= 0.5 && distance!==0) {
-        console.log(distance)
-        if (src.angle < dest.angle) {
-          src.angle = src.angle - 0.01;
-          dest.angle = dest.angle + 0.01;
+      if (distance <= 0.3 && distance!==0) {
+        if (src.angle <= dest.angle) {
+          dest.angle = normalizeAngle(dest.angle + 0.01);
         } else if (src.angle > dest.angle) {
-          src.angle = src.angle + 0.01;
-          dest.angle = dest.angle - 0.01;
+          dest.angle = normalizeAngle(dest.angle - 0.01);
         }
       }
 
@@ -72,6 +75,7 @@ function update() {
 
 function render() {
   _.forEach(nodes, e => {
+    // if (e.angle > Math.PI *2) console.log(e.angle);
     polar.drawNode(e.radius, e.angle, {color:e.color});
   });
 }
@@ -87,4 +91,7 @@ function animate() {
 
 };
 
-animate();
+// animate();
+// render();
+
+console.log(nodesGroupByYear);
