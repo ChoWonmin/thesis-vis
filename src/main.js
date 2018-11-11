@@ -58,29 +58,31 @@ function normalizeAngle(angle) {
 function collide(collision) {
   _.forEach(nodes, src => {
     _.forEach(nodesGroupByYear[src.year], dest => {
-      const distance = Math.abs(src.angle - dest.angle);
-
       if (src.id === dest.id)
         return;
 
-      if (distance <= collision) {
+      let theta = Math.abs(src.angle - dest.angle);
+
+      if ((2*Math.PI - theta)* yearMap[src.year] <= collision) {
         if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle - 0.01);
-          dest.angle = normalizeAngle(dest.angle + 0.01);
-        } else if (src.angle > dest.angle) {
           src.angle = normalizeAngle(src.angle + 0.01);
           dest.angle = normalizeAngle(dest.angle - 0.01);
+        } else if (src.angle > dest.angle) {
+          src.angle = normalizeAngle(src.angle - 0.01);
+          dest.angle = normalizeAngle(dest.angle + 0.01);
         }
+        return;
       }
 
+      const length = theta * yearMap[src.year];
 
-      if (distance >= 2*Math.PI - collision) {
+      if (length <= collision) {
         if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle + 0.01);
-          dest.angle = normalizeAngle(dest.angle - 0.01);
-        } else if (src.angle > dest.angle) {
           src.angle = normalizeAngle(src.angle - 0.01);
           dest.angle = normalizeAngle(dest.angle + 0.01);
+        } else if (src.angle > dest.angle) {
+          src.angle = normalizeAngle(src.angle + 0.01);
+          dest.angle = normalizeAngle(dest.angle - 0.01);
         }
       }
 
@@ -99,11 +101,12 @@ function animate() {
 
   polar.clear();
 
-  collide(0.1);
+  collide(20);
 
   render();
 
 };
 
+console.log(yearMap);
+
 animate();
-// render();
