@@ -51,9 +51,12 @@ _.forEach(data, (e, i) => {
   const len = parseInt(i/15)+1;
   for (let j=0; j<len; j++) {
     let value = i - parseInt(Math.random()*i);
-    let isValid = _.find(e['references'], e => e===value) || e===value;
 
-    if (!isValid) {
+    let isValid = (!_.find(e['references'], e => e===value)) && i!=value;
+
+    // console.log(i, value, !_.find(e['references'], e => e===value), i!=value, isValid);
+
+    if (isValid) {
       e['references'].push(value);
     }
   }

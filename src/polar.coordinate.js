@@ -99,6 +99,27 @@ Polar.prototype = {
 
   },
 
+  drawLine: function (src, dest, line = {}) {
+    line = {
+      x1: this.origin.x + src.radius * Math.cos(src.angle),
+      y1: this.origin.y + src.radius * Math.sin(src.angle),
+      x2: this.origin.x + dest.radius * Math.cos(dest.angle),
+      y2: this.origin.y + dest.radius * Math.sin(dest.angle),
+      color: line.color || '#b3b3b3',
+      strokeWidth: line.strokeWidth || 1
+    };
+
+    this.activeG.append('line')
+      .attr('x1', line.x1)
+      .attr('y1', line.y1)
+      .attr('x2', line.x2)
+      .attr('y2', line.y2)
+      .attr('stroke', line.color)
+      .attr('stroke-width', line.strokeWidth)
+      .attr('opacity', 0.1);
+
+  },
+
   clear: function () {
     this.activeG.selectAll('*').remove();
   }
