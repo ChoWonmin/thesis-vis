@@ -45,8 +45,6 @@ for (let i=2000; i<2017; i++) {
   nodesGroupByYear[i] = _.filter(nodes, e => e.year === i);
 }
 
-console.log(nodesGroupByYear);
-
 function normalizeAngle(angle) {
   if (angle < 0)
     return Math.PI * 2 + angle;
@@ -90,14 +88,20 @@ function collide(collision) {
   });
 }
 
+let cnt = 0;
+
 function render() {
   _.forEach(nodes, e => {
     polar.drawNode(e.radius, e.angle, {color:e.color});
 
-    _.forEach(e.references, reference => {
-      polar.drawLine(e, nodes[reference]);
-    })
+    _.forEach(e.references, j => {
+      const reference = nodes[j];
 
+      if (e.year === reference.year+2 && e.cluster === reference.cluster) {
+        cnt++;
+        polar.drawLine(e, reference);
+      }
+    })
   });
 }
 
@@ -112,8 +116,9 @@ function animate() {
 
 };
 
-render();
+// render();
 
-// animate();
+animate();
 
 console.log(nodes);
+console.log(cnt);
