@@ -103,6 +103,10 @@ function render() {
         _.forEach(e.references, j => {
             const reference = nodes[j];
 
+            _.forEach(reference.references, k => {
+              polar.drawLine(reference, nodes[k]);
+            });
+
             polar.drawLine(e, reference);
         });
     }).on('mouseout', function () {
