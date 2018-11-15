@@ -54,41 +54,47 @@ function normalizeAngle(angle) {
 }
 
 function collide(collision) {
-  _.forEach(nodes, src => {
-    _.forEach(nodesGroupByYear[src.year], dest => {
-      if (src.id === dest.id)
-        return;
+  let isCollide = true;
+  while(isCollide) {
+    isCollide = false;
 
-      let theta = Math.abs(src.angle - dest.angle);
+    _.forEach(nodes, src => {
+      _.forEach(nodesGroupByYear[src.year], dest => {
+        if (src.id === dest.id)
+          return;
 
-      if ((2*Math.PI - theta)* yearMap[src.year] <= collision) {
-        if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle + 0.01);
-          dest.angle = normalizeAngle(dest.angle - 0.01);
-        } else if (src.angle > dest.angle) {
-          src.angle = normalizeAngle(src.angle - 0.01);
-          dest.angle = normalizeAngle(dest.angle + 0.01);
+        let theta = Math.abs(src.angle - dest.angle);
+
+        if ((2*Math.PI - theta)* yearMap[src.year] <= collision) {
+          isCollide = true;
+          if (src.angle <= dest.angle) {
+            src.angle = normalizeAngle(src.angle + 0.01);
+            dest.angle = normalizeAngle(dest.angle - 0.01);
+          } else if (src.angle > dest.angle) {
+            src.angle = normalizeAngle(src.angle - 0.01);
+            dest.angle = normalizeAngle(dest.angle + 0.01);
+          }
+          return;
         }
-        return;
-      }
 
-      const length = theta * yearMap[src.year];
+        const length = theta * yearMap[src.year];
 
-      if (length <= collision) {
-        if (src.angle <= dest.angle) {
-          src.angle = normalizeAngle(src.angle - 0.01);
-          dest.angle = normalizeAngle(dest.angle + 0.01);
-        } else if (src.angle > dest.angle) {
-          src.angle = normalizeAngle(src.angle + 0.01);
-          dest.angle = normalizeAngle(dest.angle - 0.01);
+        if (length <= collision) {
+          isCollide = true;
+          if (src.angle <= dest.angle) {
+            src.angle = normalizeAngle(src.angle - 0.01);
+            dest.angle = normalizeAngle(dest.angle + 0.01);
+          } else if (src.angle > dest.angle) {
+            src.angle = normalizeAngle(src.angle + 0.01);
+            dest.angle = normalizeAngle(dest.angle - 0.01);
+          }
         }
-      }
 
+      });
     });
-  });
-}
+  }
 
-let cnt = 0;
+}
 
 function render() {
   _.forEach(nodes, e => {
@@ -97,28 +103,26 @@ function render() {
     _.forEach(e.references, j => {
       const reference = nodes[j];
 
-      if (e.year === reference.year+2 && e.cluster === reference.cluster) {
-        cnt++;
+      if (e.cluster === reference.cluster ) //&& e.year === reference.year+2)
         polar.drawLine(e, reference);
-      }
-    })
+
+    });
   });
 }
 
-function animate() {
-  requestAnimationFrame( animate );
+// function animate() {
+//   requestAnimationFrame( animate );
+//
+//   polar.clear();
+//
+//   collide(15);
+//
+//   render();
+// };
 
-  polar.clear();
+collide(15);
+render();
 
-  collide(15);
-
-  render();
-
-};
-
-// render();
-
-animate();
+// animate();
 
 console.log(nodes);
-console.log(cnt);

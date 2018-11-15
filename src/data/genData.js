@@ -52,9 +52,7 @@ _.forEach(data, (e, i) => {
   for (let j=0; j<len; j++) {
     let value = i - parseInt(Math.random()*i);
 
-    let isValid = (!_.find(e['references'], e => e===value)) && i!=value;
-
-    // console.log(i, value, !_.find(e['references'], e => e===value), i!=value, isValid);
+    let isValid = (!_.find(e['references'], e => e===value)) && i!=value && e.year > data[value].year;
 
     if (isValid) {
       e['references'].push(value);
@@ -62,7 +60,12 @@ _.forEach(data, (e, i) => {
   }
 });
 
-fs.writeFile('./data.js', JSON.stringify(data), function (err) {
+fs.writeFile('./data.js', 'const data = ', function (err) {
+  if (err) throw err;
+  console.log('Saved!');
+});
+
+fs.appendFile('./data.js', JSON.stringify(data), function (err) {
   if (err) throw err;
   console.log('Saved!');
 });
