@@ -13,7 +13,8 @@ const Polar =  function(renderer) {
   this.axisG = this.root.append('g');
   this.backgroundG = this.root.append('g');
   this.activeG = this.root.append('g');
-  this.backgroud = renderer;
+  this.foregroundG = this.root.append('g');
+
   /**
    * canvas width
    * @property {number}
@@ -67,7 +68,7 @@ Polar.prototype = {
       color: node.color||'#fefefe',
     };
 
-    this.activeG.append('circle')
+    return this.activeG.append('circle')
       .attr('cx',circle.x)
       .attr('cy',circle.y)
       .attr('r',circle.size)
@@ -109,7 +110,7 @@ Polar.prototype = {
       strokeWidth: line.strokeWidth || 1
     };
 
-    this.activeG.append('line')
+    this.foregroundG.append('line')
       .attr('x1', line.x1)
       .attr('y1', line.y1)
       .attr('x2', line.x2)
@@ -122,6 +123,7 @@ Polar.prototype = {
 
   clear: function () {
     this.activeG.selectAll('*').remove();
+    this.foregroundG.selectAll('*').remove();
   }
 
 };

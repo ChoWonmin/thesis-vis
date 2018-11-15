@@ -98,15 +98,24 @@ function collide(collision) {
 
 function render() {
   _.forEach(nodes, e => {
-    polar.drawNode(e.radius, e.angle, {color:e.color});
+    polar.drawNode(e.radius, e.angle, {color:e.color})
+      .on('mouseover', function () {
+        _.forEach(e.references, j => {
+            const reference = nodes[j];
 
-    _.forEach(e.references, j => {
-      const reference = nodes[j];
-
-      if (e.cluster === reference.cluster ) //&& e.year === reference.year+2)
-        polar.drawLine(e, reference);
-
+            polar.drawLine(e, reference);
+        });
+    }).on('mouseout', function () {
+      polar.foregroundG.selectAll('*').remove();
     });
+
+    // _.forEach(e.references, j => {
+    //   const reference = nodes[j];
+    //
+    //   if (e.cluster === reference.cluster && e.year <= reference.year+3)
+    //     polar.drawLine(e, reference);
+    // });
+
   });
 }
 
