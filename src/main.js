@@ -103,11 +103,13 @@ function render() {
         _.forEach(e.references, j => {
             const reference = nodes[j];
 
-            _.forEach(reference.references, k => {
-              polar.drawLine(reference, nodes[k]);
-            });
+            // _.forEach(reference.references, k => {
+            //   if (e.cluster === nodes[k].cluster)
+            //     polar.drawLine(reference, nodes[k]);
+            // });
 
-            polar.drawLine(e, reference);
+            if (e.cluster === reference.cluster)
+              polar.drawLine(e, reference);
         });
     }).on('mouseout', function () {
       polar.foregroundG.selectAll('*').remove();
@@ -123,6 +125,37 @@ function render() {
   });
 }
 
+const roots = _.filter(nodes, e => e.references.length < 1);
+console.log(roots);
+
+function bfs() {
+  const visit = {};
+  const root = nodes[345]//roots[0];
+
+  const queue = [];
+  queue.push(root);
+  visit[root.id] = true;
+
+  while(queue.length > 0) {
+    const node = queue.shift();
+
+    console.log(node, 'while');
+
+    for (let i=0; i<node.references.length; i++) {
+      const dest = nodes[node.references[i]];
+      console.log(dest);
+
+      if(!visit[dest.id]) {
+        queue.push(nodes[dest.id]);
+        visit[dest.id] = true;
+      }
+    }
+
+    node.color = '#ffaaff';
+
+  }
+}
+
 // function animate() {
 //   requestAnimationFrame( animate );
 //
@@ -134,8 +167,9 @@ function render() {
 // };
 
 collide(15);
+bfs();
 render();
 
 // animate();
 
-console.log(nodes);
+// console.log(nodes);
