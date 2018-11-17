@@ -103,11 +103,6 @@ function render() {
         _.forEach(e.references, j => {
             const reference = nodes[j];
 
-            // _.forEach(reference.references, k => {
-            //   if (e.cluster === nodes[k].cluster)
-            //     polar.drawLine(reference, nodes[k]);
-            // });
-
             if (e.cluster === reference.cluster)
               polar.drawLine(e, reference);
         });
@@ -126,11 +121,10 @@ function render() {
 }
 
 const roots = _.filter(nodes, e => e.references.length < 1);
-console.log(roots);
 
 function bfs() {
   const visit = {};
-  const root = nodes[345]//roots[0];
+  const root = nodes[100]//roots[0];
 
   const queue = [];
   queue.push(root);
@@ -139,11 +133,8 @@ function bfs() {
   while(queue.length > 0) {
     const node = queue.shift();
 
-    console.log(node, 'while');
-
     for (let i=0; i<node.references.length; i++) {
       const dest = nodes[node.references[i]];
-      console.log(dest);
 
       if(!visit[dest.id]) {
         queue.push(nodes[dest.id]);
@@ -156,6 +147,31 @@ function bfs() {
   }
 }
 
+function drawTree(root) {
+  const visit = {};
+
+  const queue = [];
+  queue.push(root);
+  visit[root.id] = true;
+
+  while(queue.length > 0) {
+    const node = queue.shift();
+
+    for (let i=0; i<node.references.length; i++) {
+      const dest = nodes[node.references[i]];
+
+      if(!visit[dest.id] && dest.cluster === root.cluster) {
+        queue.push(nodes[dest.id]);
+        visit[dest.id] = true;
+      }
+    }
+
+    node.angle = root.angle;
+
+  }
+}
+
+
 // function animate() {
 //   requestAnimationFrame( animate );
 //
@@ -166,10 +182,14 @@ function bfs() {
 //   render();
 // };
 
-collide(15);
-bfs();
+_.filter(nodes, e=> e.year===2016).forEach(e => {
+  drawTree(e);
+});
+
+collide(35);
 render();
 
 // animate();
 
-// console.log(nodes);
+
+
