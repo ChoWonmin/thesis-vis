@@ -143,7 +143,6 @@ function bfs() {
     }
 
     node.color = '#ffaaff';
-
   }
 }
 
@@ -182,14 +181,19 @@ function drawTree(root) {
 //   render();
 // };
 
+collide(35);
 _.filter(nodes, e=> e.year===2016).forEach(e => {
   drawTree(e);
 });
 
-collide(35);
+collide(25);
 render();
 
 // animate();
+
+const util = new Util();
+
+console.log(util);
 
 
 
