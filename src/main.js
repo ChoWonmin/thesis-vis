@@ -1,10 +1,10 @@
 const polar = new Polar(d3.select('#renderer'));
 
-const tmp = _.filter(data, e => e.offspring.length > 25);
+// const tmp = _.filter(data, e => e.offspring.length > 25);
 
-let target = {};
+let target = data;
 
-_.forEach(tmp, e => target[e._id]=e);
+// _.forEach(tmp, e => target[e._id]=e);
 
 console.log(target);
 
@@ -176,17 +176,6 @@ function drawTree(root) {
   }
 }
 
-
-// function animate() {
-//   requestAnimationFrame( animate );
-//
-//   polar.clear();
-//
-//   collide(15);
-//
-//   render();
-// };
-
 collide(10);
 // _.filter(nodes, e=> e.year>2010).forEach(e => { // leaf
 //   drawTree(e);
@@ -195,7 +184,6 @@ collide(10);
 // collide(25);
 render();
 
-// animate();
-
-console.log(nodes['1aebaeae-db84-4727-b93b-511d08df43b9']);
+// console.log(nodes['1aebaeae-db84-4727-b93b-511d08df43b9']);
+console.log(nodes);
 

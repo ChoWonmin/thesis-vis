@@ -6,7 +6,7 @@ const dest = '../data/out.json';
 
 const data = JSON.parse(fs.readFileSync(source, 'utf8'));
 
-const out = {};
+let out = {};
 _.forEach(_.filter(data, e=> e.year >= 1995), e => out[e._id] = e);
 
 _.forEach(data, e => {
@@ -26,5 +26,8 @@ _.forEach(out, e => {
   }
   e.references = tmp;
 });
+
+out = {};
+_.forEach(_.filter(data, e=> e.offspring.length > 25), e => out[e._id] = e);
 
 fs.writeFileSync(dest, JSON.stringify(out));
