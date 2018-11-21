@@ -1,17 +1,22 @@
 const polar = new Polar(d3.select('#renderer'));
 
-let target = data;
-console.log(data);
+const tmp = _.filter(data, e => e.offspring.length > 25);
+
+let target = {};
+
+_.forEach(tmp, e => target[e._id]=e);
+
+console.log(target);
 
 let yearMap = [];
-for (let i=2000; i<2017; i++)
+for (let i=1995; i<2017; i++)
   yearMap.push(i);
 
-const diffCircle = polar.height/44;
+const diffCircle = polar.height/54;
 const padding = 5;
 
 yearMap = _.reduce(yearMap, (ac,e)=> {
-  ac[e] = (e-2000+5)*diffCircle + padding;
+  ac[e] = (e-1995+5)*diffCircle + padding;
   return ac;
 },{});
 
@@ -33,16 +38,16 @@ const colorMap = {
 };
 
 const nodes = _.forEach(target, e => {
-  const diffAngle = 2*Math.PI/5;
-  let angle = diffAngle * e.cluster + diffAngle * (Math.random() - 0.5);
+  const diffAngle = 2*Math.PI/1;
+  let angle = diffAngle * (Math.random() - 0.5);
 
   e.radius = yearMap[e.year];
   e.angle = normalizeAngle(angle);
-  e.color = colorMap[e.cluster];
+  e.color = colorMap[0];
 });
 
 const nodesGroupByYear = {};
-for (let i=2000; i<2017; i++) {
+for (let i=1995; i<2017; i++) {
   nodesGroupByYear[i] = _.filter(nodes, e => e.year === i);
 }
 
@@ -61,7 +66,7 @@ function collide(collision) {
 
     _.forEach(nodes, src => {
       _.forEach(nodesGroupByYear[src.year], dest => {
-        if (src.id === dest.id)
+        if (src._id === dest._id)
           return;
 
         let theta = Math.abs(src.angle - dest.angle);
@@ -129,7 +134,7 @@ function bfs() {
 
   const queue = [];
   queue.push(root);
-  visit[root.id] = true;
+  visit[root._id] = true;
 
   while(queue.length > 0) {
     const node = queue.shift();
@@ -137,9 +142,9 @@ function bfs() {
     for (let i=0; i<node.references.length; i++) {
       const dest = nodes[node.references[i]];
 
-      if(!visit[dest.id]) {
-        queue.push(nodes[dest.id]);
-        visit[dest.id] = true;
+      if(!visit[dest._id]) {
+        queue.push(nodes[dest._id]);
+        visit[dest._id] = true;
       }
     }
 
@@ -152,7 +157,7 @@ function drawTree(root) {
 
   const queue = [];
   queue.push(root);
-  visit[root.id] = true;
+  visit[root._id] = true;
 
   while(queue.length > 0) {
     const node = queue.shift();
@@ -160,9 +165,9 @@ function drawTree(root) {
     for (let i=0; i<node.references.length; i++) {
       const dest = nodes[node.references[i]];
 
-      if(!visit[dest.id] && dest.cluster === root.cluster) {
-        queue.push(nodes[dest.id]);
-        visit[dest.id] = true;
+      if(!visit[dest._id] && dest.cluster === root.cluster) {
+        queue.push(nodes[dest._id]);
+        visit[dest._id] = true;
       }
     }
 
@@ -182,8 +187,8 @@ function drawTree(root) {
 //   render();
 // };
 
-// collide(35);
-// _.filter(nodes, e=> e.year===2016).forEach(e => { // leaf
+collide(10);
+// _.filter(nodes, e=> e.year>2010).forEach(e => { // leaf
 //   drawTree(e);
 // });
 //
@@ -192,5 +197,5 @@ render();
 
 // animate();
 
-
+console.log(nodes['1aebaeae-db84-4727-b93b-511d08df43b9']);
 

@@ -12,8 +12,8 @@ const Polar =  function(renderer) {
   this.root = renderer;
   this.axisG = this.root.append('g');
   this.backgroundG = this.root.append('g');
-  this.activeG = this.root.append('g');
   this.foregroundG = this.root.append('g');
+  this.activeG = this.root.append('g');
 
   /**
    * canvas width
@@ -107,7 +107,7 @@ Polar.prototype = {
       x2: this.origin.x + dest.radius * Math.cos(dest.angle),
       y2: this.origin.y + dest.radius * Math.sin(dest.angle),
       color: line.color || '#b3b3b3',
-      strokeWidth: line.strokeWidth || 1
+      strokeWidth: line.strokeWidth || 2
     };
 
     this.foregroundG.append('line')
