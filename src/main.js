@@ -1,6 +1,7 @@
 const polar = new Polar(d3.select('#renderer'));
 
 let target = data;
+console.log(data);
 
 let yearMap = [];
 for (let i=2000; i<2017; i++)
@@ -181,19 +182,15 @@ function drawTree(root) {
 //   render();
 // };
 
-collide(35);
-_.filter(nodes, e=> e.year===2016).forEach(e => {
-  drawTree(e);
-});
-
-collide(25);
+// collide(35);
+// _.filter(nodes, e=> e.year===2016).forEach(e => { // leaf
+//   drawTree(e);
+// });
+//
+// collide(25);
 render();
 
 // animate();
-
-const util = new Util();
-
-console.log(util);
 
 
 
