@@ -6,8 +6,6 @@ let target = data;
 
 // _.forEach(tmp, e => target[e._id]=e);
 
-console.log(target);
-
 let yearMap = [];
 for (let i=1995; i<2017; i++)
   yearMap.push(i);
@@ -102,26 +100,39 @@ function collide(collision) {
 
 }
 
+let cnt = 0;
+
 function render() {
   _.forEach(nodes, e => {
     polar.drawNode(e.radius, e.angle, {color:e.color})
       .on('mouseover', function () {
         _.forEach(e.references, j => {
-            const reference = nodes[j];
+          const reference = nodes[j];
 
-            if (e.cluster === reference.cluster)
-              polar.drawLine(e, reference);
+          if (reference===undefined)
+            return ;
+
+          polar.drawLine(e, reference, {color: '#ffbc73'});
+        });
+        _.forEach(e.offspring, j => {
+          const child = nodes[j];
+
+          if (child===undefined)
+            return ;
+
+          polar.drawLine(e, child, {color: '#aaffff'});
         });
     }).on('mouseout', function () {
       polar.foregroundG.selectAll('*').remove();
     });
 
-    // _.forEach(e.references, j => {
-    //   const reference = nodes[j];
-    //
-    //   if (e.cluster === reference.cluster && e.year <= reference.year+3)
-    //     polar.drawLine(e, reference);
-    // });
+    _.forEach(e.references, j => {
+      const reference = nodes[j];
+      if (reference === undefined)
+        return;
+
+      polar.drawLine(e, reference);
+    });
 
   });
 }
@@ -162,10 +173,13 @@ function drawTree(root) {
   while(queue.length > 0) {
     const node = queue.shift();
 
-    for (let i=0; i<node.references.length; i++) {
-      const dest = nodes[node.references[i]];
+    for (let i=0; i<node.offspring.length; i++) {
+      const dest = nodes[node.offspring[i]];
 
-      if(!visit[dest._id] && dest.cluster === root.cluster) {
+      if (dest === undefined)
+        continue;
+
+      if(!visit[dest._id]) {
         queue.push(nodes[dest._id]);
         visit[dest._id] = true;
       }
@@ -176,14 +190,13 @@ function drawTree(root) {
   }
 }
 
-collide(10);
-// _.filter(nodes, e=> e.year>2010).forEach(e => { // leaf
-//   drawTree(e);
-// });
-//
-// collide(25);
+collide(25);
+_.forEach(roots, e => { // leaf
+  e.color = '#5041ff';
+  drawTree(e);
+});
+
+collide(25);
 render();
 
-// console.log(nodes['1aebaeae-db84-4727-b93b-511d08df43b9']);
-console.log(nodes);
-
+console.log(_.filter(nodes, e => e.year === 2002));

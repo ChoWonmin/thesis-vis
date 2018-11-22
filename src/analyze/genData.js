@@ -28,6 +28,6 @@ _.forEach(out, e => {
 });
 
 out = {};
-_.forEach(_.filter(data, e=> e.offspring.length > 25), e => out[e._id] = e);
+_.forEach(_.filter(data, e=> e.offspring.length > 80), e => out[e._id] = e);
 
 fs.writeFileSync(dest, JSON.stringify(out));
