@@ -199,4 +199,4 @@ _.forEach(roots, e => { // leaf
 collide(25);
 render();
 
-console.log(_.filter(nodes, e => e.year === 2002));
+console.log(target);
