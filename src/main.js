@@ -1,10 +1,6 @@
 const polar = new Polar(d3.select('#renderer'));
 
-// const tmp = _.filter(data, e => e.offspring.length > 25);
-
 let target = data;
-
-// _.forEach(tmp, e => target[e._id]=e);
 
 let yearMap = [];
 for (let i=1995; i<2017; i++)
@@ -100,38 +96,23 @@ function collide(collision) {
 
 }
 
-let cnt = 0;
-
 function render() {
   _.forEach(nodes, e => {
     polar.drawNode(e.radius, e.angle, {color:e.color})
       .on('mouseover', function () {
-        _.forEach(e.references, j => {
-          const reference = nodes[j];
-
-          if (reference===undefined)
-            return ;
-
-          polar.drawLine(e, reference, {color: '#ffbc73'});
+        _.forEach(e.references, parent => {
+          polar.drawLine(e, nodes[parent], {color: '#ffbc73'});
         });
-        _.forEach(e.offspring, j => {
-          const child = nodes[j];
 
-          if (child===undefined)
-            return ;
-
-          polar.drawLine(e, child, {color: '#aaffff'});
+        _.forEach(e.offsprings, child => {
+          polar.drawLine(e, nodes[child], {color: '#aaffff'});
         });
     }).on('mouseout', function () {
       polar.foregroundG.selectAll('*').remove();
     });
 
-    _.forEach(e.references, j => {
-      const reference = nodes[j];
-      if (reference === undefined)
-        return;
-
-      polar.drawLine(e, reference);
+    _.forEach(e.references, parent => {
+      polar.drawLine(e, nodes[parent]);
     });
 
   });
@@ -163,7 +144,7 @@ function bfs() {
   }
 }
 
-function drawTree(root) {
+function genTree(root) {
   const visit = {};
 
   const queue = [];
@@ -173,8 +154,8 @@ function drawTree(root) {
   while(queue.length > 0) {
     const node = queue.shift();
 
-    for (let i=0; i<node.offspring.length; i++) {
-      const dest = nodes[node.offspring[i]];
+    for (let i=0; i<node.offsprings.length; i++) {
+      const dest = nodes[node.offsprings[i]];
 
       if (dest === undefined)
         continue;
@@ -190,13 +171,15 @@ function drawTree(root) {
   }
 }
 
-collide(25);
+collide(35);
 _.forEach(roots, e => { // leaf
   e.color = '#5041ff';
-  drawTree(e);
+  genTree(e);
 });
 
-collide(25);
+collide(35);
 render();
 
+console.log(roots);
 console.log(target);
+console.log(Object.keys(target).length);
