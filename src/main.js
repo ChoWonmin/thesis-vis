@@ -118,7 +118,8 @@ function render() {
   });
 }
 
-const roots = _.filter(nodes, e => e.references.length < 1);
+const roots_topDown = _.filter(nodes, e => e.references.length < 1);
+const roots_bottomUp = _.filter(nodes, e => e.offsprings.length < 1);
 
 function bfs() {
   const visit = {};
@@ -144,7 +145,34 @@ function bfs() {
   }
 }
 
-function genTree(root) {
+function genTreeByBottomUp(root) {
+  const visit = {};
+
+  const queue = [];
+  queue.push(root);
+  visit[root._id] = true;
+
+  while(queue.length > 0) {
+    const node = queue.shift();
+
+    for (let i=0; i<node.references.length; i++) {
+      const dest = nodes[node.references[i]];
+
+      if (dest === undefined)
+        continue;
+
+      if(!visit[dest._id]) {
+        queue.push(nodes[dest._id]);
+        visit[dest._id] = true;
+      }
+    }
+
+    node.angle = root.angle;
+
+  }
+}
+
+function genTreeByTopDown(root) {
   const visit = {};
 
   const queue = [];
@@ -172,14 +200,20 @@ function genTree(root) {
 }
 
 collide(35);
-_.forEach(roots, e => { // leaf
+// _.forEach(roots_topDown, e => { // root
+//   e.color = '#5041ff';
+//   genTreeByTopDown(e);
+// });
+
+_.forEach(roots_bottomUp, e => { // leaf
   e.color = '#5041ff';
-  genTree(e);
+  genTreeByBottomUp(e);
 });
 
 collide(35);
 render();
 
-console.log(roots);
+console.log(roots.length);
+console.log(roots_offspring.length);
 console.log(target);
 console.log(Object.keys(target).length);
