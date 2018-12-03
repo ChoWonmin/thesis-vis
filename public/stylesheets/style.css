@@ -59,35 +59,20 @@ body {
           background-color: #ccc;
           border-radius: 5px;
           border: none; }
-        .container .container-body .side-list .item-list .cluster .cluster-title {
-          height: 36px;
-          font-size: 11px;
-          color: #4a4a4a;
-          border-bottom: solid 1px #d8d8d8;
+        .container .container-body .side-list .item-list .item {
+          height: 80px;
           padding: 10px;
-          position: relative; }
-          .container .container-body .side-list .item-list .cluster .cluster-title .arrow {
-            position: absolute;
-            right: 5px;
-            font-size: 18px;
-            top: calc(50% - 9px);
-            transition: all .3s; }
-        .container .container-body .side-list .item-list .cluster .cluster-body {
-          display: none; }
-          .container .container-body .side-list .item-list .cluster .cluster-body .item {
-            height: 80px;
-            padding: 10px;
-            border-bottom: solid 1px #ccc; }
-            .container .container-body .side-list .item-list .cluster .cluster-body .item .title {
-              color: #0071bc;
-              height: 40px; }
-            .container .container-body .side-list .item-list .cluster .cluster-body .item .author {
-              font-size: 11px;
-              color: #333; }
-        .container .container-body .side-list .item-list:hover .cluster-title .arrow {
-          transform: rotate(180deg); }
-        .container .container-body .side-list .item-list:hover .cluster-body {
-          display: block; }
+          border-bottom: solid 1px #ccc; }
+          .container .container-body .side-list .item-list .item .title {
+            color: #0071bc;
+            height: 40px; }
+          .container .container-body .side-list .item-list .item .author {
+            font-size: 11px;
+            color: #333;
+            height: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; }
     .container .container-body .main {
       flex: 12; }
     .container .container-body .side-info {

@@ -64,39 +64,20 @@ $header-height: 60px
           background-color: #ccc
           border-radius: 5px
           border: none
-        .cluster
-          .cluster-title
-            height: 36px
+        .item
+          height: 80px
+          padding: 10px
+          border-bottom: solid 1px #ccc
+          .title
+            color: #0071bc
+            height: 40px
+          .author
             font-size: 11px
-            color: #4a4a4a
-            border-bottom: solid 1px #d8d8d8
-            padding: 10px
-            position: relative
-            .arrow
-              position: absolute
-              right: 5px
-              font-size: 18px
-              top: calc(50% - 9px)
-              transition: all .3s
-          .cluster-body
-            display: none
-            .item
-              height: 80px
-              padding: 10px
-              border-bottom: solid 1px #ccc
-              .title
-                color: #0071bc
-                height: 40px
-              .author
-                font-size: 11px
-                color: #333
-        &:hover
-          .cluster-title
-            .arrow
-              transform: rotate(180deg)
-          .cluster-body
-            display: block
-
+            color: #333
+            height: 12px
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
     .main
       flex: 12
     .side-info
