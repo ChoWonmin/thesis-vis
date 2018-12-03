@@ -1,0 +1,43 @@
+extends layout
+
+block content
+	.container
+		.header.flex-wrapper.test
+			.empty
+				.logo
+			input(placeholder="Search title")#search-input
+			.empty
+		.container-body
+			.side-list
+				.filter-wrapper
+					.filter-box
+						i.material-icons.radio radio_button_unchecked
+						.text Group
+					.filter-box
+						i.material-icons.radio radio_button_checked
+						.text Conference
+				.item-list
+					each i in [1, 2, 3, 4]
+						.cluster
+							.cluster-title Group#{i}
+								i.material-icons.arrow keyboard_arrow_down
+							.cluster-body
+								each j in [1,2,3,4]
+									.item
+										.title Arcs, Angles, or Areas : Individual Data Encodings in Pie and Donut...
+										.author 2016, Drew Skau, Robert Kosara
+			.main
+				svg#renderer
+					.node-guide.guide
+					.line-guide.guide
+						.line-wrapper
+							.line
+							.text Citation Relation
+						.line-wrapper
+							.line.genealogy
+							.text Genealogy Relation
+			.side-info
+
+	script(src="polar.coordinate.js")
+	script(src="/util/ajax.util.js")
+	script(src="sandglass.js")

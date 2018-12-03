@@ -18,7 +18,7 @@ body {
       width: 40px;
       height: 40px;
       background-color: orange; }
-    .container .header .search-input {
+    .container .header #search-input {
       width: 350px;
       height: 40px;
       outline: none;

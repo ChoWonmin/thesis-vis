@@ -200,10 +200,9 @@ function genTreeByTopDown(root) {
 }
 
 collide(35);
-// _.forEach(roots_topDown, e => { // root
-//   e.color = '#5041ff';
-//   genTreeByTopDown(e);
-// });
+_.forEach(roots_topDown, e => { // root
+  genTreeByTopDown(e);
+});
 
 _.forEach(roots_bottomUp, e => { // leaf
   e.color = '#5041ff';
@@ -213,7 +212,7 @@ _.forEach(roots_bottomUp, e => { // leaf
 collide(35);
 render();
 
-console.log(roots.length);
-console.log(roots_offspring.length);
+console.log(roots_bottomUp.length);
+console.log(roots_topDown.length);
 console.log(target);
 console.log(Object.keys(target).length);
