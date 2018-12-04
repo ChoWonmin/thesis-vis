@@ -7,21 +7,29 @@ const sandglass = (async function() {
       <div class="author">${authors}</div>
   </div>`;
 
+  const colorMap = {
+    0: '#ff704f',
+    1: '#bee8ad',
+    2: '#89c3ff',
+    3: '#5041ff',
+    4: '#ffbc73',
+  };
+
   const parent = new Plane(d3.select('#parent'));
   const child = new Plane(d3.select('#child'));
-  
 
   this.drawAxis = function () {
     const startYear = 2000;
     const lastYear = 2018;
     const padding = 30;
     const num = lastYear - startYear;
-    const diff = (parent.height- padding) / (num-1);
+    const diff = (parent.height- 2*padding) / (num-1);
     const res = {};
 
     for (let i=0; i< num; i++) {
-      res[startYear + i] = diff * i;
-      parent.drawAxisX(diff * i, startYear+i);
+      const y = diff * i + padding;
+      res[startYear + i] = y;
+      parent.drawAxisX(y, startYear+i);
     }
 
     child.drawAxisX(50);
@@ -55,8 +63,14 @@ const sandglass = (async function() {
 
   this.drawNode = function () {
     const target = _.groupBy(list, 'cluster');
-    console.log(target);
-    console.log(nodesGroupByYear);
+
+    const diff = parent.width / Object.keys(target).length;
+    _.forEach(target, (nodes,i) => {
+      _.forEach(nodes, node => {
+        parent.drawNode(diff*Math.random() + diff*i, nodesGroupByYear[node.year], {color: colorMap[node.cluster]});
+      });
+    });
+
   };
   
   //this.addSearchEvent();
