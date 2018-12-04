@@ -8,5 +8,8 @@
 group안에는 해당 논문과 그룹을 이루는 논문들의 리스트가 있고, 그 리스트안에는 result라는 그룹 판정값이 포함되어 있습니다.
 params로는 논문 아이디를 / 쿼리는 value인데 optional 값입니다. 이는 그룹을 판정 하는값으로, value를 쿼리로 넘기지 않았을 시 디폴트로는 5.3의 값을 가집니다. 5.3기준으로 내리거나 높여서 테스트 가능합니다.
 
+[GET] http://dblp.ourguide.xyz/papers/search
+전체리스트
+
 example
 http://dblp.ourguide.xyz/papers/2f3397df-feb5-48bf-b120-74f8643cf85f?value=5.3
