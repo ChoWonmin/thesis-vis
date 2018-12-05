@@ -1,3 +1,11 @@
+console.log(hull(
+  [[1,1], [2,4], [8,1], [2,1], [1,9], [1,3]]
+));
+
+console.log(hull(
+  [{x: 1, y: 1}, {x: 2, y: 4}, {x: 8, y: 1}, {x: 2, y: 1}, {x: 1, y: 9}, {x: 3, y: 3}], 100, ['.x', '.y']
+));
+
 const sandglass = (async function() {
 
   const searchBar = document.getElementById('search-input');
@@ -29,7 +37,9 @@ const sandglass = (async function() {
     for (let i=0; i< num; i++) {
       const y = diff * i + padding;
       res[startYear + i] = y;
-      parent.drawAxisX(y, startYear+i);
+      //parent.drawAxisX(y, startYear+i);
+      parent.drawAxisX(y);
+      child.drawAxisX(y);
     }
 
     child.drawAxisX(50);
@@ -68,12 +78,13 @@ const sandglass = (async function() {
     _.forEach(target, (nodes,i) => {
       _.forEach(nodes, node => {
         parent.drawNode(diff*Math.random() + diff*i, nodesGroupByYear[node.year], {color: colorMap[node.cluster]});
+        child.drawNode(diff*Math.random() + diff*i, nodesGroupByYear[node.year], {color: colorMap[node.cluster]});
       });
     });
 
   };
   
-  //this.addSearchEvent();
+  this.addSearchEvent();
   this.drawNode();
 
 }) ();

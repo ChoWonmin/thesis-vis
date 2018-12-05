@@ -13,3 +13,10 @@ params로는 논문 아이디를 / 쿼리는 value인데 optional 값입니다. 
 
 example
 http://dblp.ourguide.xyz/papers/2f3397df-feb5-48bf-b120-74f8643cf85f?value=5.3
+http://dblp.ourguide.xyz/papers/2f3397df-feb5-48bf-b120-74f8643cf85f/ancestor?value=5.3
+http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor
+8026f56a-a93e-4933-8ead-c9aa9e3f0498
+
+[post]
+source: [id1, id2 ...]
+dest: [id1, id2, id3 ...]
