@@ -1,55 +1,59 @@
-console.log(hull(
-  [[1,1], [2,4], [8,1], [2,1], [1,9], [1,3]]
-));
-
-console.log(hull(
-  [{x: 1, y: 1}, {x: 2, y: 4}, {x: 8, y: 1}, {x: 2, y: 1}, {x: 1, y: 9}, {x: 3, y: 3}], 100, ['.x', '.y']
-));
-
 const sandglass = (async function() {
 
   const searchBar = document.getElementById('search-input');
   const searchList = document.getElementById('search-list');
-  const searchItem = (title, authors) => `<div class="item">
-      <div class="title">${title}</div>
-      <div class="author">${authors}</div>
-  </div>`;
+  const searchItem = (title, authors, id) => {
+    const item = document.createElement('div');
+    item.setAttribute('id', id);
+    item.classList.add('item');
 
-  const colorMap = {
-    0: '#ff704f',
-    1: '#bee8ad',
-    2: '#89c3ff',
-    3: '#5041ff',
-    4: '#ffbc73',
+    const titleEle = document.createElement('div');
+    titleEle.classList.add('title');
+    titleEle.innerHTML = title;
+
+    const authorsEle = document.createElement('div');
+    authorsEle.classList.add('author');
+    authorsEle.innerHTML = authors;
+
+    item.appendChild(titleEle);
+    item.appendChild(authorsEle);
+
+    return item;
   };
 
-  const parent = new Plane(d3.select('#parent'));
-  const child = new Plane(d3.select('#child'));
+  const colorMap = [
+    '#c62828',
+    '#c2185b',
+    '#311b92',
+    '#304ff3',
+    '#00b8d4',
+    '#2e7d32',
+    '#ffd600',
+    '#ffa000',
+    '#4e342e',
+    '#37474f'
+  ];
 
-  this.drawAxis = function () {
-    const startYear = 2000;
-    const lastYear = 2018;
+  const main = new Plane(d3.select('#main'));
+
+  this.drawAxis = function (startYear, lastYear) {
     const padding = 30;
     const num = lastYear - startYear;
-    const diff = (parent.height- 2*padding) / (num-1);
+    const diff = (main.height- 2*padding) / (num-1);
     const res = {};
 
     for (let i=0; i< num; i++) {
       const y = diff * i + padding;
       res[startYear + i] = y;
-      //parent.drawAxisX(y, startYear+i);
-      parent.drawAxisX(y);
-      child.drawAxisX(y);
+      main.drawAxisX(y);
     }
 
-    child.drawAxisX(50);
-
     return res;
-
   };
-  const nodesGroupByYear = this.drawAxis();
+  let lineGroupByYear = this.drawAxis(1985, 2015);
 
-  let list = data; //(await axios.get('http://dblp.ourguide.xyz/papers/search')).data;
+  let list = (await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
+  let target = {};
 
   this.addSearchEvent = function () {
     searchBar.addEventListener('keyup', async function (event) {
@@ -65,7 +69,19 @@ const sandglass = (async function() {
 
         searchList.innerHTML = '';
         _.forEach(list, e => {
-          searchList.innerHTML += searchItem(e.title, e.authors);
+          const item = searchItem(e.title, e.authors, e._id);
+          searchList.appendChild(item);
+
+          item.addEventListener('click', async function (event) {
+            const id = this.getAttribute('id');
+            target = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+              params: {
+                value: 10
+              }
+            })).data;
+            console.log(target);
+          });
+
         });
       }
     })
@@ -74,17 +90,16 @@ const sandglass = (async function() {
   this.drawNode = function () {
     const target = _.groupBy(list, 'cluster');
 
-    const diff = parent.width / Object.keys(target).length;
+    const diff = main.width / Object.keys(target).length;
     _.forEach(target, (nodes,i) => {
       _.forEach(nodes, node => {
-        parent.drawNode(diff*Math.random() + diff*i, nodesGroupByYear[node.year], {color: colorMap[node.cluster]});
-        child.drawNode(diff*Math.random() + diff*i, nodesGroupByYear[node.year], {color: colorMap[node.cluster]});
+        main.drawNode(diff*Math.random() + diff*i, lineGroupByYear[node.year], {color: colorMap[node.cluster]});
       });
     });
 
   };
   
   this.addSearchEvent();
-  this.drawNode();
+  //this.drawNode();
 
 }) ();

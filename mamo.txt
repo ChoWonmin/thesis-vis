@@ -1,6 +1,7 @@
 [GET] http://dblp.ourguide.xyz/papers/search?q={검색어}
 논문 타이틀에 검색어를 포함한 논문이 검색됩니다.
 검색되는 논문은 citatation 2000회 이상 / 2000년 이후에 발행된 논문입니다.
+abstract 없는 논문 제
 {검색어 추천: text / image / data / classification / multi}
 
 [GET] http://dblp.ourguide.xyz/papers/{논문 ID}?value=5.3
@@ -17,6 +18,172 @@ http://dblp.ourguide.xyz/papers/2f3397df-feb5-48bf-b120-74f8643cf85f/ancestor?va
 http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor
 8026f56a-a93e-4933-8ead-c9aa9e3f0498
 
-[post]
+[post] http://dblp.ourguide.xyz/papers/similarity
 source: [id1, id2 ...]
 dest: [id1, id2, id3 ...]
+
+포도송이
+그룹은 반 투명
+
+subview : 그룹정보
+그룹장: 그룹내에서 모든 노드의 관계를 확인
+그룹의 키워드
+
+* [주의] POST는 모두 Body를 포함해줘야함
+
+[GET] http://dblp.ourguide.xyz/papers/search?q={검색어}
+논문 타이틀에 검색어를 포함한 논문이 검색됩니다.
+검색되는 논문은 citatation 2000회 이상 / 2000년 이전에 발행된 논문입니다.
+q가 없을때는 citatation 2000회 이상 / 2000년 이전에 발행된 전체 논문이 반환됩니다.
+{검색어 추천: text / image / data / classification / multi}
+
+[GET] http://dblp.ourguide.xyz/papers/{논문 ID}/ancestor?value=10
+[GET] http://dblp.ourguide.xyz/papers/{논문 ID}/offspring?value=10
+해당 논문의 group정보가 포함된 논문의 메타정보를 리턴합니다.
+value는 안줘도 되는 값입니다.
+group안에는 해당 논문과 그룹을 이루는 논문들의 리스트가 있고, 그 리스트안에는 result라는 그룹 판정값이 포함되어 있습니다.
+params로는 논문 아이디를 / 쿼리는 value인데 optional 값입니다. 이는 그룹을 판정 하는값으로, value를 쿼리로 넘기지 않았을 시 0보다 큰 result를 가진 논문들이 그룹으로 판명되어 리턴됩니다.
+
+[GET] http://dblp.ourguide.xyz/papers/{논문 ID}/info
+논문 아이디로 논문의 정보를 리턴해줍니다.(노드 호버시 사용 가능 )
+
+[POST] http://dblp.ourguide.xyz/papers/representative
+그룹내 그룹장 찾기 / 그룹에 포함된 모든 노드들을 주면 됩니다.
+* 주의: 검색후 1 depth에서 발견된 논문은 검색된 논문 아이디를 포함해줘야 함!
+* Body예시:
+{
+  "group": [
+    "4be8eaca-a28a-4382-86c2-9314735066bd",
+    "7281e056-a2f6-4df3-bd54-fbd8ed8b737c",
+    "78efca65-ac1a-49bd-92ec-c8f0770fefb8",
+    "7d911d74-c4c1-4d4d-a737-5cf51e404c83",
+    "85bd9cc6-e41a-4fd4-8f3b-e776329efc4b",
+    "aa16086f-f3bf-432a-bfcd-9f1521c9ac52",
+    "cab91964-4e8d-4211-8d32-455cfd690b60",
+    "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+    "ea9489be-45f6-482f-937c-11b644d5f2ce",
+    "f258af24-e04a-49d4-86c3-1ab1c2f43914",
+    "fa96abdc-7c09-419b-a00d-4c24d5879eeb"
+  ]
+}
+* 리턴형태
+{
+  "_id": "fa96abdc-7c09-419b-a00d-4c24d5879eeb",
+  "result": 55.78779188057422
+}
+
+[POST] http://dblp.ourguide.xyz/papers/network
+그룹 네트워크 받기
+* Body예시:
+{
+  "group": [
+    "4be8eaca-a28a-4382-86c2-9314735066bd",
+    "7281e056-a2f6-4df3-bd54-fbd8ed8b737c",
+    "78efca65-ac1a-49bd-92ec-c8f0770fefb8",
+    "7d911d74-c4c1-4d4d-a737-5cf51e404c83",
+    "85bd9cc6-e41a-4fd4-8f3b-e776329efc4b",
+    "aa16086f-f3bf-432a-bfcd-9f1521c9ac52",
+    "cab91964-4e8d-4211-8d32-455cfd690b60",
+    "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+    "ea9489be-45f6-482f-937c-11b644d5f2ce",
+    "f258af24-e04a-49d4-86c3-1ab1c2f43914",
+    "fa96abdc-7c09-419b-a00d-4c24d5879eeb"
+  ]
+}
+* 리턴형태
+{
+  "node": [
+    {
+      "_id": "cab91964-4e8d-4211-8d32-455cfd690b60",
+      "title": "Differential unitary space-time modulation",
+      "year": 2000
+    },
+    {
+      "_id": "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+      "title": "Limited feedback unitary precoding for spatial multiplexing systems",
+      "year": 2005
+    },
+    {
+      "_id": "fa96abdc-7c09-419b-a00d-4c24d5879eeb",
+      "title": "Systematic design of unitary space-time constellations",
+      "year": 2000
+    }
+  ],
+  "edges": [
+    {
+      "from": "cab91964-4e8d-4211-8d32-455cfd690b60",
+      "to": "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+      "value": 10.134098956188067
+    },
+    {
+      "from": "cab91964-4e8d-4211-8d32-455cfd690b60",
+      "to": "fa96abdc-7c09-419b-a00d-4c24d5879eeb",
+      "value": 14.302755841422552
+    },
+    {
+      "from": "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+      "to": "fa96abdc-7c09-419b-a00d-4c24d5879eeb",
+      "value": 10.323614217776958
+    }
+  ]
+}
+
+[POST] http://dblp.ourguide.xyz/papers/topic
+* Body 예시
+(주의) Body에서 value 라는 값을 안주면 한번 이상 출현한 모든 키워드들이 나옴
+5를 주면 5번이상 그룹내 키워드에서 출현한 키워드들만 필터해서 줌
+{
+  "group": [
+    "4be8eaca-a28a-4382-86c2-9314735066bd",
+    "7281e056-a2f6-4df3-bd54-fbd8ed8b737c",
+    "78efca65-ac1a-49bd-92ec-c8f0770fefb8",
+    "7d911d74-c4c1-4d4d-a737-5cf51e404c83",
+    "85bd9cc6-e41a-4fd4-8f3b-e776329efc4b",
+    "aa16086f-f3bf-432a-bfcd-9f1521c9ac52",
+    "cab91964-4e8d-4211-8d32-455cfd690b60",
+    "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+    "ea9489be-45f6-482f-937c-11b644d5f2ce",
+    "f258af24-e04a-49d4-86c3-1ab1c2f43914",
+    "fa96abdc-7c09-419b-a00d-4c24d5879eeb"
+  ],
+  "value": "5"
+}
+
+*리턴형태
+[
+  {
+    "keword": "channel",
+    "count": 8
+  },
+  {
+    "keword": "receiv",
+    "count": 7
+  },
+  {
+    "keword": "transmitt",
+    "count": 5
+  },
+  {
+    "keword": "fade",
+    "count": 5
+  }
+]
+
+[POST] http://dblp.ourguide.xyz/papers/similarity
+그룹대 그룹의 유사도를 구할때 사용
+* Body 예시
+{
+  "source": [
+    "cab91964-4e8d-4211-8d32-455cfd690b60",
+    "dc00221e-92c4-4ee4-8a7b-666ab5fd28c5",
+    "f258af24-e04a-49d4-86c3-1ab1c2f43914",
+    "fa96abdc-7c09-419b-a00d-4c24d5879eeb"
+  ],
+  "dest": [
+    "4be8eaca-a28a-4382-86c2-9314735066bd",
+    "78efca65-ac1a-49bd-92ec-c8f0770fefb8"
+  ]
+}
+
+*리턴형태
+97.2356748788072 (숫자)

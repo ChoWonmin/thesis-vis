@@ -30,7 +30,7 @@ const Plane =  function(renderer) {
    * @property {object}
    */
   this.origin = {x: 0, y: this.height};
-  this.strokeColor = '#ddd';
+  this.strokeColor = '#282828';
 };
 Plane.prototype = {
   /**
