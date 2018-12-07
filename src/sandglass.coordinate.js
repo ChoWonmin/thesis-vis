@@ -29,32 +29,56 @@ const Plane =  function(renderer) {
    * origin point
    * @property {object}
    */
-  this.origin = {x: 0, y: this.height};
-  this.strokeColor = '#282828';
+  this.origin = {x: 30, y: this.height};
+  this.axisLength = this.width - 80;
+  this.mappingY = {};
+  this.strokeColor = '#bdbdbd'; //'#ededed';
 };
 Plane.prototype = {
   /**
    * draw axis
    * @param {string} [c] Axis color (default='#fefefe')
    */
-  drawAxisX: function (offset, text, c) {
+  drawAxisX: function (offset, text, c, weight=1) {
     const color = c || this.strokeColor;
 
     this.axisG.append('line')
       .attr('x1',this.origin.x)
       .attr('y1',this.origin.y - offset)
-      .attr('x2',this.width)
+      .attr('x2',this.origin.x + this.axisLength)
       .attr('y2',this.origin.y - offset)
-      .attr('stroke',color);
+      .attr('stroke',color)
+      .attr('stroke-width', weight);
 
     if (text) {
       this.axisG.append('text')
-        .attr('x', 30)
+        .attr('x', this.origin.x + this.axisLength + 4)
         .attr('y', this.origin.y - offset)
-        .attr('fill', 'black')
-        .attr('text-anchor', 'middle')
+        .attr('fill', '#444444')
+        .attr('alignment-baseline', 'central')
         .text(text)
     }
+  },
+  drawBox: function(y, title, authors) {
+    const rectWidth = this.axisLength - 30;
+
+    this.backgroundG.append('rect')
+      .attr('x', this.origin.x + 30)
+      .attr('y', y - 15)
+      .attr('width', rectWidth)
+      .attr('height', 30)
+      .attr('fill','#575757');
+
+    if (title || authors) {
+      this.backgroundG.append('text')
+        .attr('x', this.origin.x + 30 + rectWidth/2)
+        .attr('y', y)
+        .attr('fill', '#fefefe')
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        .text(`${title}  ${authors}`)
+    }
+
   },
   /**
    * draw node
@@ -78,6 +102,8 @@ Plane.prototype = {
       .attr('opacity',0.8)
   },
   clear: function () {
+    this.mappingY = {};
+    this.backgroundG.selectAll('*').remove();
     this.activeG.selectAll('*').remove();
     this.foregroundG.selectAll('*').remove();
   }

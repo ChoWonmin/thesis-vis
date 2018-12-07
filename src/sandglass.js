@@ -21,6 +21,8 @@ const sandglass = (async function() {
     return item;
   };
 
+  const logoBtn = document.getElementsByClassName('logo')[0];
+
   const colorMap = [
     '#c62828',
     '#c2185b',
@@ -33,27 +35,46 @@ const sandglass = (async function() {
     '#4e342e',
     '#37474f'
   ];
+  const that = this;
 
   const main = new Plane(d3.select('#main'));
 
   this.drawAxis = function (startYear, lastYear) {
     const padding = 30;
-    const num = lastYear - startYear;
+    const num = lastYear - startYear + 1;
     const diff = (main.height- 2*padding) / (num-1);
-    const res = {};
 
-    for (let i=0; i< num; i++) {
+    for (let i=0; i< num ; i++) {
       const y = diff * i + padding;
-      res[startYear + i] = y;
-      main.drawAxisX(y);
+      main.mappingY[lastYear - i] = y;
+
+      if (i%5===0)
+        main.drawAxisX(y, lastYear-i, '#9B9B9B');
+      else
+        main.drawAxisX(y);
     }
-
-    return res;
   };
-  let lineGroupByYear = this.drawAxis(1985, 2015);
 
-  let list = (await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
-  let target = {};
+  let list = {}; //(await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
+
+  this.render = function (parent, offspring) {
+
+    main.clear();
+    this.drawAxis(parent.year - 15, parent.year + 15);
+    main.drawBox(main.mappingY[parent.year], parent.title, parent.authors);
+
+    console.log(Object.keys(parent.group).length, Object.keys(offspring.group).length);
+    console.log(offspring);
+
+    _.forEach(parent.group, e => {
+      main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[1]});
+    });
+
+    _.forEach(offspring.group, e => {
+      main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[2]});
+    });
+
+  };
 
   this.addSearchEvent = function () {
     searchBar.addEventListener('keyup', async function (event) {
@@ -74,14 +95,19 @@ const sandglass = (async function() {
 
           item.addEventListener('click', async function (event) {
             const id = this.getAttribute('id');
-            target = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+            const parent = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
               params: {
-                value: 10
+                value: 5
               }
             })).data;
-            console.log(target);
-          });
+            const offspring = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
+              params: {
+                value: 5
+              }
+            })).data;
 
+            that.render(parent, offspring);
+          });
         });
       }
     })
@@ -98,8 +124,12 @@ const sandglass = (async function() {
     });
 
   };
-  
+
+
   this.addSearchEvent();
-  //this.drawNode();
+  logoBtn.addEventListener('click', (event) => {
+    main.clear();
+    console.log('clear');
+  })
 
 }) ();
