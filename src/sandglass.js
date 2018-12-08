@@ -36,13 +36,20 @@ const sandglass = (async function() {
     '#37474f'
   ];
   const that = this;
+  const target = {
+    self: {},
+    parents: {},
+    offsprings: {}
+  };
 
   const main = new Plane(d3.select('#main'));
 
-  this.drawAxis = function (startYear, lastYear) {
+  this.init = function (startYear, lastYear) {
     const padding = 30;
     const num = lastYear - startYear + 1;
     const diff = (main.height- 2*padding) / (num-1);
+
+    main.clear();
 
     for (let i=0; i< num ; i++) {
       const y = diff * i + padding;
@@ -57,21 +64,29 @@ const sandglass = (async function() {
 
   let list = {}; //(await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
 
-  this.render = function (parent, offspring) {
+  this.update = function () {
 
-    main.clear();
-    this.drawAxis(parent.year - 15, parent.year + 15);
-    main.drawBox(main.mappingY[parent.year], parent.title, parent.authors);
+  }
 
-    console.log(Object.keys(parent.group).length, Object.keys(offspring.group).length);
-    console.log(offspring);
+  this.render = function (target) {
+    console.log(target);
+    //console.log(Object.keys(target.parents.length, Object.keys(target.offsprings).length));
 
-    _.forEach(parent.group, e => {
-      main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[1]});
+    main.drawBox(main.mappingY[target.self.year], target.self.title, target.self.authors);
+    _.forEach(target.parents, e => {
+      try {
+        main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[1]});
+      } catch (err) {
+        console.log(err);
+      }
     });
 
-    _.forEach(offspring.group, e => {
-      main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[2]});
+    _.forEach(target.offsprings, e => {
+      try {
+        main.drawNode(Math.random()*main.axisLength, main.mappingY[e.year], {color: colorMap[2]});
+      } catch (err) {
+        console.log(err);
+      }
     });
 
   };
@@ -95,36 +110,26 @@ const sandglass = (async function() {
 
           item.addEventListener('click', async function (event) {
             const id = this.getAttribute('id');
-            const parent = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+            target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
+            target.parents = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
               params: {
                 value: 5
               }
-            })).data;
-            const offspring = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
+            })).data.group;
+            target.offsprings = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
               params: {
                 value: 5
               }
-            })).data;
+            })).data.group;
 
-            that.render(parent, offspring);
+            that.init(target.self.year - 15, target.self.year + 15);
+            that.update();
+            that.render(target);
           });
         });
       }
     })
   };
-
-  this.drawNode = function () {
-    const target = _.groupBy(list, 'cluster');
-
-    const diff = main.width / Object.keys(target).length;
-    _.forEach(target, (nodes,i) => {
-      _.forEach(nodes, node => {
-        main.drawNode(diff*Math.random() + diff*i, lineGroupByYear[node.year], {color: colorMap[node.cluster]});
-      });
-    });
-
-  };
-
 
   this.addSearchEvent();
   logoBtn.addEventListener('click', (event) => {

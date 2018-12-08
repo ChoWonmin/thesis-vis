@@ -87,10 +87,13 @@ Plane.prototype = {
    * @param {object} [node] node property(size, color)
    */
   drawNode: function(x, y, node = {}) {
+    if (!x || !y) {
+      return new Error('x, y mush be a number.');
+    }
     const circle = {
       x: this.origin.x + x,
       y: this.origin.y - y,
-      size: node.size||'5',
+      size: node.size||'7',
       color: node.color||'#fefefe',
     };
 
@@ -104,8 +107,9 @@ Plane.prototype = {
   clear: function () {
     this.mappingY = {};
     this.backgroundG.selectAll('*').remove();
-    this.activeG.selectAll('*').remove();
+    this.axisG.selectAll('*').remove();
     this.foregroundG.selectAll('*').remove();
+    this.activeG.selectAll('*').remove();
   }
 
 };
