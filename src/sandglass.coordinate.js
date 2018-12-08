@@ -88,12 +88,13 @@ Plane.prototype = {
    * @param {object} [node] node property(size, color)
    */
   drawNode: function(x, y, node = {}) {
-    if (!x || !y) {
+    if (isNaN(x) || isNaN(y)) {
+      console.log(x, y);
       return new Error('x, y mush be a number.');
     }
     const circle = {
       x: this.origin.x + x,
-      y: this.origin.y - y,
+      y: y,
       size: node.size||this.nodeRadius,
       color: node.color||'#fefefe',
     };

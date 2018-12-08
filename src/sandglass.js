@@ -51,21 +51,26 @@ const sandglass = (async function() {
 
     main.clear();
 
+    main.mappingY[year] = main.origin.y;
+    main.drawAxisX(0, year, '#9B9B9B');
+
     for (let i=1; i<= 15 ; i++) {
-      const py = diff * (-i) + padding;
-      const oy = diff * i + padding
-      main.mappingY[year + i] = y;;
-      main.mappingY[year - i] = y;
+      const py = diff * (-i);
+      const oy = diff * i;
+      main.mappingY[year - i] = main.origin.y + py;
+      main.mappingY[year + i] = main.origin.y + oy;
 
       if (i%5===0)  {
-        main.drawAxisX(py, lastYear-i, '#9B9B9B');
-        main.drawAxisX(oy, lastYear-i, '#9B9B9B');
+        main.drawAxisX(py, year-i, '#9B9B9B');
+        main.drawAxisX(oy, year+i, '#9B9B9B');
       } else {
         main.drawAxisX(py);
         main.drawAxisX(oy);
       }
-
     }
+
+    console.log(main.mappingY);
+
   };
 
   let list = {}; //(await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
@@ -81,7 +86,7 @@ const sandglass = (async function() {
 
     _.forEach(target.parents, yearGroup => {
       try {
-        const startPoint = main.axisLength/2 - (2*main.nodeRadius)*yearGroup.length/2;
+        const startPoint = -(2*main.nodeRadius)*yearGroup.length/2;
         _.forEach(yearGroup, (node, i) => {
           main.drawNode(startPoint + i*(2*main.nodeRadius), main.mappingY[node.year], {color: colorMap[1]});
         });
@@ -92,8 +97,9 @@ const sandglass = (async function() {
 
     _.forEach(target.offsprings, yearGroup => {
       try {
+        console.log(yearGroup);
         _.forEach(yearGroup, (node, i) => {
-          const startPoint = main.axisLength/2 - (2*main.nodeRadius)*yearGroup.length/2;
+          const startPoint = -(2*main.nodeRadius)*yearGroup.length/2;
           main.drawNode(startPoint + i*(2*main.nodeRadius), main.mappingY[node.year], {color: colorMap[2]});
         });
       } catch (err) {
