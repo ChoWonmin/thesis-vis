@@ -29,10 +29,11 @@ const Plane =  function(renderer) {
    * origin point
    * @property {object}
    */
-  this.origin = {x: 30, y: this.height};
+  this.origin = {x: this.width/2, y: this.height/2};
   this.axisLength = this.width - 80;
   this.mappingY = {};
   this.strokeColor = '#bdbdbd'; //'#ededed';
+  this.nodeRadius = 3;
 };
 Plane.prototype = {
   /**
@@ -43,40 +44,40 @@ Plane.prototype = {
     const color = c || this.strokeColor;
 
     this.axisG.append('line')
-      .attr('x1',this.origin.x)
-      .attr('y1',this.origin.y - offset)
-      .attr('x2',this.origin.x + this.axisLength)
-      .attr('y2',this.origin.y - offset)
+      .attr('x1',this.origin.x - this.axisLength/2)
+      .attr('y1',this.origin.y + offset)
+      .attr('x2',this.origin.x + this.axisLength/2)
+      .attr('y2',this.origin.y + offset)
       .attr('stroke',color)
       .attr('stroke-width', weight);
 
     if (text) {
       this.axisG.append('text')
-        .attr('x', this.origin.x + this.axisLength + 4)
-        .attr('y', this.origin.y - offset)
+        .attr('x', this.origin.x + this.axisLength/2 + 4)
+        .attr('y', this.origin.y + offset)
         .attr('fill', '#444444')
         .attr('alignment-baseline', 'central')
         .text(text)
     }
   },
-  drawBox: function(y, title, authors) {
-    const rectWidth = this.axisLength - 30;
+  drawBox: function(y, title) {
+    const rectWidth = this.axisLength - 60;
 
     this.backgroundG.append('rect')
-      .attr('x', this.origin.x + 30)
+      .attr('x', this.origin.x - rectWidth/2)
       .attr('y', y - 15)
       .attr('width', rectWidth)
       .attr('height', 30)
       .attr('fill','#575757');
 
-    if (title || authors) {
+    if (title) {
       this.backgroundG.append('text')
-        .attr('x', this.origin.x + 30 + rectWidth/2)
+        .attr('x', this.origin.x)
         .attr('y', y)
         .attr('fill', '#fefefe')
         .attr('text-anchor', 'middle')
         .attr('alignment-baseline', 'central')
-        .text(`${title}  ${authors}`)
+        .text(`${title}`)
     }
 
   },
@@ -93,7 +94,7 @@ Plane.prototype = {
     const circle = {
       x: this.origin.x + x,
       y: this.origin.y - y,
-      size: node.size||'7',
+      size: node.size||this.nodeRadius,
       color: node.color||'#fefefe',
     };
 
