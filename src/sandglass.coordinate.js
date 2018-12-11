@@ -34,6 +34,7 @@ const Plane =  function(renderer) {
   this.mappingY = {};
   this.strokeColor = '#bdbdbd'; //'#ededed';
   this.nodeRadius = 7;
+  this.nodes = [];
 };
 Plane.prototype = {
   /**
@@ -116,14 +117,20 @@ Plane.prototype = {
       .attr('opacity',0.8)
   },
   drawForceSimulation: function(nodes, x, y) {
-    d3.forceSimulation(nodes)
+    _.forEach(nodes, e => {
+      this.nodes.push(e);
+    });
+
+    console.log(this.nodes.length);
+
+    d3.forceSimulation(this.nodes)
       .force('charge', d3.forceManyBody().strength(5))
       .force('center', d3.forceCenter(this.origin.x + x, y))
       .force('collision', d3.forceCollide().radius(10))
       .on('tick', () => {
         const u = this.activeG
           .selectAll('circle')
-          .data(nodes);
+          .data(this.nodes);
 
         u.enter()
           .append('circle')
@@ -132,7 +139,7 @@ Plane.prototype = {
           .attr('cx', d => d.x)
           .attr('cy', d => d.y);
 
-        u.exit().remove()
+        //u.exit()
       });
   },
   clear: function () {
