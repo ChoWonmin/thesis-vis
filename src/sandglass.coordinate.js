@@ -88,7 +88,7 @@ Plane.prototype = {
    * @param {number} y
    * @param {object} [node] node property(size, color)
    */
-  drawNode: function(x, y, node = {}) {
+  drawNode: function(x, y, node = {}, g) {
     if (isNaN(x) || isNaN(y)) {
       return new Error('x, y mush be a number.');
     }
@@ -109,20 +109,17 @@ Plane.prototype = {
   drawPolygon: function(points = [], color) {
     const c =  color||'#fefefe';
 
-    return this.activeG.append('polygon')
-      .attr('points', points.map(r=> `${this.origin.x + r.x},${r.y} `).join(' '))
+    return g.append('polygon')
+      .attr('points', points.map(r=> `${r.x},${r.y} `).join(' '))
       .attr('fill',c)
-      .attr('opacity',0.8)
+      .attr('opacity',0.2)
   },
   drawForceSimulation: function(nodes, x, y, color = '#c62828') {
-    // const group = this.activeG.append('circle')
-    //                   .attr('cx',this.origin.x + x)
-    //                   .attr('cy',y)
-    //                   .attr('r',this.groupRadius)
-    //                   .attr('fill',color)
-    //                   .attr('opacity',0.6);
+    const g = this.activeG.append('g');
+    var convexHull = g.append("path")
+      .attr("class",'hull');
 
-    const u = this.activeG.append('g')
+    const u = g
       .selectAll('circle')
       .data(nodes)
       .enter()
@@ -131,12 +128,19 @@ Plane.prototype = {
       .attr('fill', color);
 
     d3.forceSimulation(nodes)
-      .force('charge', d3.forceManyBody().strength(5))
+      .force('charge', d3.forceManyBody().strength(10))
       .force('center', d3.forceCenter(this.origin.x + x, y))
-      .force('collision', d3.forceCollide().radius(10))
-      .force('y', d3.forceY().y(0))
+      .force('collision', d3.forceCollide().radius(this.nodeRadius + 3))
+      .force("forceY", d3.forceY().strength(.1).y(.5))
       .on('tick', () => {
-          u.attr('cx', d => d.x).attr('cy', d => d.y);
+        u.attr('cx', d => d.x).attr('cy', d => d.y);
+
+        const hull = d3.polygonHull(u.data().map(function(d) { return [d.x, d.y]; }) );
+        convexHull.datum(hull)
+          .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+          .attr("fill", color)
+          .attr("opacity", .2);
+
       });
   },
   clear: function () {
