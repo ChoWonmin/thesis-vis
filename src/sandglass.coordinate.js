@@ -34,7 +34,7 @@ const Plane =  function(renderer) {
   this.mappingY = {};
   this.strokeColor = '#bdbdbd'; //'#ededed';
   this.nodeRadius = 7;
-  this.nodes = [];
+  this.groupRadius = (this.height - 60) / 12;
 };
 Plane.prototype = {
   /**
@@ -109,29 +109,32 @@ Plane.prototype = {
   drawPolygon: function(points = [], color) {
     const c =  color||'#fefefe';
 
-    console.log(points);
-
     return this.activeG.append('polygon')
       .attr('points', points.map(r=> `${this.origin.x + r.x},${r.y} `).join(' '))
       .attr('fill',c)
       .attr('opacity',0.8)
   },
-  drawForceSimulation: function(nodes, x, y) {
-    _.forEach(nodes, e => {
-      this.nodes.push(e);
-    });
+  drawForceSimulation: function(nodes, x, y, color = '#c62828') {
+    // const group = this.activeG.append('circle')
+    //                   .attr('cx',this.origin.x + x)
+    //                   .attr('cy',y)
+    //                   .attr('r',this.groupRadius)
+    //                   .attr('fill',color)
+    //                   .attr('opacity',0.6);
 
     const u = this.activeG.append('g')
       .selectAll('circle')
       .data(nodes)
       .enter()
       .append('circle')
-      .attr('r', this.nodeRadius);
+      .attr('r', this.nodeRadius)
+      .attr('fill', color);
 
     d3.forceSimulation(nodes)
       .force('charge', d3.forceManyBody().strength(5))
       .force('center', d3.forceCenter(this.origin.x + x, y))
       .force('collision', d3.forceCollide().radius(10))
+      .force('y', d3.forceY().y(0))
       .on('tick', () => {
           u.attr('cx', d => d.x).attr('cy', d => d.y);
       });

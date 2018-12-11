@@ -46,10 +46,10 @@ const sandglass = (async function() {
 
   const main = new Plane(d3.select('#main'));
 
-  // const nodde = [{}, {}, {}, {}, {}, {}];
-  // main.drawForceSimulation(nodde, 0, 200);
-  //
-  // main.drawForceSimulation(nodde, 0, 500);
+  const nodde = [{}, {}, {}, {}, {}, {}];
+  main.drawForceSimulation(nodde, 0, 200);
+
+  main.drawForceSimulation(nodde, 0, 500);
 
   this.init = function (year) {
     const padding = 30;
@@ -92,31 +92,30 @@ const sandglass = (async function() {
     let nodes = [];
     for (let i=1; i<=15; i++) {
       const yearGroup  = target.parents[target.self.year - i];
-      console.log(i, yearGroup);
 
       if (i%5==0) {
-        console.log(nodes, 'i%5');
-        main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i-3]);
+        main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0]);
         nodes = [];
       }
 
       _.forEach(yearGroup, e=> {
         nodes.push({});
       });
-
     }
 
-    groupPolygon = [];
-    _.forEach(target.offsprings, yearGroup => {
-      try {
-        _.forEach(yearGroup, (node, i) => {
-          const startPoint = -(2*main.nodeRadius)*yearGroup.length/2;
-          main.drawNode(startPoint + i*(2*main.nodeRadius), main.mappingY[node.year], {color: colorMap[2]});
-        });
-      } catch (err) {
-        console.log(err);
+    nodes = [];
+    for (let i=1; i<=15; i++) {
+      const yearGroup  = target.offsprings[target.self.year + i];
+
+      if (i%5==0) {
+        main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year + i-3], colorMap[2]);
+        nodes = [];
       }
-    });
+
+      _.forEach(yearGroup, e=> {
+        nodes.push({});
+      });
+    }
 
   };
 
