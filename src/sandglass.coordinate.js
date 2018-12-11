@@ -137,11 +137,32 @@ Plane.prototype = {
 
         const hull = d3.polygonHull(u.data().map(function(d) { return [d.x, d.y]; }) );
         convexHull.datum(hull)
-          .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+          .attr("d", function(d) {
+            return "M" + d.join("L") + "Z"; })
           .attr("fill", color)
-          .attr("opacity", .2);
+          .attr("opacity", .4);
 
       });
+  },
+  drawLine: function (src, dest, line = {}) {
+    line = {
+      x1: this.origin.x + src.x,
+      y1: src.y,
+      x2: this.origin.x + dest.x,
+      y2: dest.y,
+      color: line.color || '#C62828',
+      strokeWidth: line.strokeWidth || 2,
+      opacity: line.opacity || .2,
+    };
+
+    this.foregroundG.append('line')
+      .attr('x1', line.x1)
+      .attr('y1', line.y1)
+      .attr('x2', line.x2)
+      .attr('y2', line.y2)
+      .attr('stroke', line.color)
+      .attr('stroke-width', line.strokeWidth)
+      .attr('opacity', 0.8);
   },
   clear: function () {
     this.mappingY = {};

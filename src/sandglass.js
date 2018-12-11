@@ -46,9 +46,9 @@ const sandglass = (async function() {
 
   const main = new Plane(d3.select('#main'));
 
-  const nodde = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
-  main.drawForceSimulation(nodde, 0, 200);
-  main.drawForceSimulation(nodde, 0, 500);
+  // const nodde = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+  // main.drawForceSimulation(nodde, 0, 200);
+  // main.drawForceSimulation(nodde, 0, 500);
 
   this.init = function (year) {
     const padding = 30;
@@ -75,8 +75,6 @@ const sandglass = (async function() {
       }
     }
 
-    console.log(main.mappingY);
-
   };
 
   let list = {}; //(await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
@@ -93,7 +91,10 @@ const sandglass = (async function() {
       const yearGroup  = target.parents[target.self.year - i];
 
       if (i%5==0) {
-        main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0]);
+        if (nodes.length >= 1) {
+          main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0]);
+          main.drawLine({x:0, y:main.mappingY[target.self.year]},{x:0, y:main.mappingY[target.self.year - i+3]},{strokeWidth: 10, color:colorMap[0]});
+        }
         nodes = [];
       }
 
@@ -107,7 +108,11 @@ const sandglass = (async function() {
       const yearGroup  = target.offsprings[target.self.year + i];
 
       if (i%5==0) {
-        main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year + i-3], colorMap[2]);
+        if (nodes.length >= 1) {
+          main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year + i-2], colorMap[2]);
+          main.drawLine({x:0, y:main.mappingY[target.self.year]},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[2]});
+        }
+
         nodes = [];
       }
 
@@ -159,7 +164,6 @@ const sandglass = (async function() {
               return e;
             }).groupBy('year').value();
 
-            console.log(target);
             that.init(target.self.year);
             that.update();
             that.render();

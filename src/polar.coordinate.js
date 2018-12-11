@@ -118,7 +118,6 @@ Polar.prototype = {
       .attr('stroke', line.color)
       .attr('stroke-width', line.strokeWidth)
       .attr('opacity', 0.8);
-
   },
 
   clear: function () {
