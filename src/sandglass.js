@@ -46,10 +46,10 @@ const sandglass = (async function() {
 
   const main = new Plane(d3.select('#main'));
 
-  const nodde = [{}, {}, {}, {}, {}, {}];
-  main.drawForceSimulation(nodde, 0, 200);
-
-  main.drawForceSimulation(nodde, 0, 500);
+  // const nodde = [{}, {}, {}, {}, {}, {}];
+  // main.drawForceSimulation(nodde, 0, 200);
+  //
+  // main.drawForceSimulation(nodde, 0, 500);
 
   this.init = function (year) {
     const padding = 30;
