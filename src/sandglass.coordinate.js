@@ -116,7 +116,7 @@ Plane.prototype = {
   },
   drawForceSimulation: function(nodes, x, y, color = '#c62828') {
     const g = this.activeG.append('g');
-    var convexHull = g.append("path")
+    const convexHull = g.append("path")
       .attr("class",'hull');
 
     const u = g
@@ -140,7 +140,13 @@ Plane.prototype = {
           .attr("d", function(d) {
             return "M" + d.join("L") + "Z"; })
           .attr("fill", color)
-          .attr("opacity", .4);
+          .attr("opacity", .4).
+          on('click', function () {
+            /* 컨벡스헐 클릭하면
+            groups 변수에 그룹들 id 배열로 저장 */
+            const groups = _.map(nodes, e => e._id);
+            console.log(groups);
+        });
 
       });
   },
@@ -162,7 +168,7 @@ Plane.prototype = {
       .attr('y2', line.y2)
       .attr('stroke', line.color)
       .attr('stroke-width', line.strokeWidth)
-      .attr('opacity', 0.8);
+      .attr('opacity', 0.2);
   },
   clear: function () {
     this.mappingY = {};

@@ -46,10 +46,6 @@ const sandglass = (async function() {
 
   const main = new Plane(d3.select('#main'));
 
-  // const nodde = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
-  // main.drawForceSimulation(nodde, 0, 200);
-  // main.drawForceSimulation(nodde, 0, 500);
-
   this.init = function (year) {
     const padding = 30;
     const num = 31;
@@ -83,6 +79,10 @@ const sandglass = (async function() {
 
   };
 
+  this.renderGroup = function() {
+
+  };
+
   this.render = function () {
     main.drawBox(main.mappingY[target.self.year], target.self.title);
 
@@ -93,13 +93,13 @@ const sandglass = (async function() {
       if (i%5==0) {
         if (nodes.length >= 1) {
           main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0]);
-          main.drawLine({x:0, y:main.mappingY[target.self.year]},{x:0, y:main.mappingY[target.self.year - i+3]},{strokeWidth: 10, color:colorMap[0]});
+          main.drawLine({x:0, y:main.mappingY[target.self.year]-15},{x:0, y:main.mappingY[target.self.year - i+3]},{strokeWidth: 10, color:colorMap[0]});
         }
         nodes = [];
       }
 
       _.forEach(yearGroup, e=> {
-        nodes.push({});
+        nodes.push(e);
       });
     }
 
@@ -110,14 +110,14 @@ const sandglass = (async function() {
       if (i%5==0) {
         if (nodes.length >= 1) {
           main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year + i-2], colorMap[2]);
-          main.drawLine({x:0, y:main.mappingY[target.self.year]},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[2]});
+          main.drawLine({x:0, y:main.mappingY[target.self.year]+15},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[2]});
         }
 
         nodes = [];
       }
 
       _.forEach(yearGroup, e=> {
-        nodes.push({});
+        nodes.push(e);
       });
     }
 
