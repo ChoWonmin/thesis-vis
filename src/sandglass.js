@@ -36,6 +36,8 @@ const sandglass = (async function() {
     '#37474f'
   ];
   const that = this;
+  const group = [];
+  let currentGroup = 0;
   const target = {
     self: {},
     parents: {},
@@ -64,8 +66,8 @@ const sandglass = (async function() {
         main.drawAxisX(py, year-i, '#9B9B9B');
         main.drawAxisX(oy, year+i, '#9B9B9B');
       } else {
-        main.drawAxisX(py);
-        main.drawAxisX(oy);
+        // main.drawAxisX(py);
+        // main.drawAxisX(oy);
       }
     }
 
@@ -77,16 +79,20 @@ const sandglass = (async function() {
 
   this.update = function () {
 
-  }
+  };
 
-  this.render = function (target) {
-    console.log(target);
-
+  this.render = function () {
     main.drawBox(main.mappingY[target.self.year], target.self.title);
-
-    _.forEach(target.parents, yearGroup => {
+    let groupPolygon = [];
+    let groupIdx= 0;
+    _.forEach(target.parents, (yearGroup, key) => {
       try {
         const startPoint = -(2*main.nodeRadius)*yearGroup.length/2;
+        groupPolygon.push({x:startPoint, y:main.mappingY[key]});
+        groupPolygon.push({x:-startPoint, y:main.mappingY[key]});
+
+        console.log(key);
+
         _.forEach(yearGroup, (node, i) => {
           main.drawNode(startPoint + i*(2*main.nodeRadius), main.mappingY[node.year], {color: colorMap[1]});
         });
@@ -94,10 +100,11 @@ const sandglass = (async function() {
         console.log(err);
       }
     });
+    main.drawPolygon(groupPolygon, colorMap[groupIdx]);
 
+    groupPolygon = [];
     _.forEach(target.offsprings, yearGroup => {
       try {
-        console.log(yearGroup);
         _.forEach(yearGroup, (node, i) => {
           const startPoint = -(2*main.nodeRadius)*yearGroup.length/2;
           main.drawNode(startPoint + i*(2*main.nodeRadius), main.mappingY[node.year], {color: colorMap[2]});
@@ -128,21 +135,32 @@ const sandglass = (async function() {
 
           item.addEventListener('click', async function (event) {
             const id = this.getAttribute('id');
-            target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
-            target.parents = _.groupBy((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
-              params: {
-                value: 5
-              }
-            })).data.group, 'year');
-            target.offsprings = _.groupBy((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
-              params: {
-                value: 5
-              }
-            })).data.group, 'year');
 
+            target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
+
+            target.parents = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+              params: {
+                value: 3
+              }
+            })).data.group).map(e => {
+              e.group = currentGroup;
+              return e;
+            }).groupBy('year').value();
+
+            currentGroup++;
+            target.offsprings = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
+              params: {
+                value: 7
+              }
+            })).data.group).map(e => {
+              e.group = currentGroup;
+              return e;
+            }).groupBy('year').value();
+
+            console.log(target);
             that.init(target.self.year);
             that.update();
-            that.render(target);
+            that.render();
           });
         });
       }

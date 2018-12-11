@@ -10,10 +10,10 @@ const Plane =  function(renderer) {
    * @property {Object}
    */
   this.root = renderer;
-  this.axisG = this.root.append('g');
-  this.backgroundG = this.root.append('g');
-  this.foregroundG = this.root.append('g');
-  this.activeG = this.root.append('g');
+  this.axisG = this.root.append('g').attr('class','axis');
+  this.backgroundG = this.root.append('g').attr('class','background');
+  this.foregroundG = this.root.append('g').attr('class','foreground');
+  this.activeG = this.root.append('g').attr('class','active');
 
   /**
    * canvas width
@@ -33,7 +33,7 @@ const Plane =  function(renderer) {
   this.axisLength = this.width - 80;
   this.mappingY = {};
   this.strokeColor = '#bdbdbd'; //'#ededed';
-  this.nodeRadius = 3;
+  this.nodeRadius = 7;
 };
 Plane.prototype = {
   /**
@@ -89,7 +89,6 @@ Plane.prototype = {
    */
   drawNode: function(x, y, node = {}) {
     if (isNaN(x) || isNaN(y)) {
-      console.log(x, y);
       return new Error('x, y mush be a number.');
     }
     const circle = {
@@ -105,6 +104,36 @@ Plane.prototype = {
       .attr('r',circle.size)
       .attr('fill',circle.color)
       .attr('opacity',0.8)
+  },
+  drawPolygon: function(points = [], color) {
+    const c =  color||'#fefefe';
+
+    console.log(points);
+
+    return this.activeG.append('polygon')
+      .attr('points', points.map(r=> `${this.origin.x + r.x},${r.y} `).join(' '))
+      .attr('fill',c)
+      .attr('opacity',0.8)
+  },
+  drawForceSimulation: function(nodes, x, y) {
+    d3.forceSimulation(nodes)
+      .force('charge', d3.forceManyBody().strength(5))
+      .force('center', d3.forceCenter(this.origin.x + x, y))
+      .force('collision', d3.forceCollide().radius(10))
+      .on('tick', () => {
+        const u = this.activeG
+          .selectAll('circle')
+          .data(nodes);
+
+        u.enter()
+          .append('circle')
+          .attr('r', this.nodeRadius)
+          .merge(u)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
+
+        u.exit().remove()
+      });
   },
   clear: function () {
     this.mappingY = {};
