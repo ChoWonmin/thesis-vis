@@ -135,7 +135,7 @@ Plane.prototype = {
       .force('charge', d3.forceManyBody().strength(10))
       .force('center', d3.forceCenter(this.origin.x + x, y))
       .force('collision', d3.forceCollide().radius(this.nodeRadius + 3))
-      .force("forceY", d3.forceY().strength(.1).y(.5))
+      .force("forceY", d3.forceY().strength(.1).y(.3))
       .on('tick', () => {
         u.attr('cx', d => d.x).attr('cy', d => d.y);
 
