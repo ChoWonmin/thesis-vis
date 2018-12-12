@@ -80,24 +80,41 @@ const sandglass = (async function() {
   this.update = async function (id) {
     target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
 
-    target.parents = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+    let tmp = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
       params: {
         value: 3
       }
-    })).data.group).groupBy('year').value();
+    })).data.group;
 
-    target.offsprings = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
+    target.parents = _.groupBy(tmp, 'year');
+
+    tmp = _.map(tmp, (e, key)=>key);
+    target.leaderP = (await axios.post('http://dblp.ourguide.xyz/papers/representative',{
+      group: tmp
+    })).data;
+
+    /* offspring */
+    tmp = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
       params: {
         value: 7
       }
-    })).data.group).groupBy('year').value();
+    })).data.group;
+
+    target.offsprings = _.groupBy(tmp, 'year');
+
+    tmp = _.map(tmp, (e, key)=>key);
+    target.leaderO = (await axios.post('http://dblp.ourguide.xyz/papers/representative',{
+      group: tmp
+    })).data;
+
+    console.log(target);
   };
 
-  this.renderGroup = function() {
+  this.renderGroup = function(leader) {
 
   };
 
-  this.render = function () {
+  this.render = function (x) {
     main.drawBox(main.mappingY[target.self.year], target.self.title);
 
     let nodes = [];
@@ -106,7 +123,6 @@ const sandglass = (async function() {
 
       if (i%5==0) {
         if (nodes.length >= 1) {
-          console.log('target : ', target);
           main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0], target.self._id);
           main.drawLine({x:0, y:main.mappingY[target.self.year]-15},{x:0, y:main.mappingY[target.self.year - i+3]},{strokeWidth: 10, color:colorMap[0]});
         }
@@ -117,6 +133,8 @@ const sandglass = (async function() {
         nodes.push(e);
       });
     }
+
+    that.renderGroup(target.leaderP);
 
     nodes = [];
     for (let i=1; i<=15; i++) {
