@@ -102,12 +102,11 @@ const sandglass = (async function() {
 
     target.offsprings = _.groupBy(tmp, 'year');
 
-    const l = _.orderBy(tmp,'result','desc');
+    const ccId = _.orderBy(tmp,'result','desc')[0]._id;
 
-
-    tmp = (await axios.get(`http://dblp.ourguide.xyz/papers/${l[0]._id}/offspring`,{
+    tmp = (await axios.get(`http://dblp.ourguide.xyz/papers/${ccId}/offspring`,{
       params: {
-        value: .8
+        value: 1
       }
     })).data.group;
 
@@ -153,17 +152,13 @@ const sandglass = (async function() {
     }
 
     nodes = [];
-    let st = main.mappingY[target.self.year + 3];
-    let sx = 0;
     for (let i=1; i<=15; i++) {
       const yearGroup  = target.cc[target.self.year + i];
 
       if (i%5==0) {
         if (nodes.length >= 1) {
           main.drawForceSimulation(nodes, 200, main.mappingY[target.self.year + i-2], colorMap[3]);
-          main.drawLine({x:sx, y:st},{x:200, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[3]});
-          st = main.mappingY[target.self.year + i-2];
-          sx = 200;
+          //main.drawLine({x:200, y:main.mappingY[target.self.year]+15},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[3]});
         }
 
         nodes = [];
@@ -173,6 +168,7 @@ const sandglass = (async function() {
         nodes.push(e);
       });
     }
+
   };
 
   this.addSearchEvent = function () {
@@ -188,7 +184,6 @@ const sandglass = (async function() {
           })).data;
 
         searchList.innerHTML = '';
-        main.clear();
         _.forEach(list, e => {
           const item = searchItem(e.title, e.authors, e._id);
           searchList.appendChild(item);
