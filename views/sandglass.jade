@@ -2,6 +2,7 @@ extends layout
 
 block content
 	link(rel='stylesheet', href='/stylesheets/style.css')
+	link(rel='stylesheet', href='/stylesheets/side-info.css')
 
 	.container
 		.header.flex-wrapper.test
@@ -22,8 +23,30 @@ block content
 			.main
 				svg#main
 			.side-info
+				.group-information-title Group Information
+				.group-information-contents
+					.representative-thesis
+						.middle-title Representative Thesis
+						.thesis-info Title
+						.thesis-title-content
+						.thesis-info Author
+						.thesis-author-content
+						.thesis-info Paper Keyword
+						.thesis-paper-keyword-content
+					.group-keyword
+						.middle-title Group Keyword
+					.group-network
+						.middle-title Group Network
+						#mynetwork
 
 	script(src="axios/dist/axios.min.js")
+
+	script(type="text/javascript" src="/side-info/representative-thesis.js")
+	script(type="text/javascript" src="/side-info/group-keyword.js")
+	script(type="text/javascript" src="/side-info/hex-to-hsl.js")
+	script(type="text/javascript" src="/side-info/group-network.js")
+	script(type="text/javascript" src="/side-info/side-info.js")
+
 	script(src="sandglass.coordinate.js")
 	script(src="data/data.js")
 	script(src="sandglass.js")
