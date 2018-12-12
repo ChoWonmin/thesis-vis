@@ -16,8 +16,7 @@ body {
     align-items: center; }
     .container .header .logo {
       width: 40px;
-      height: 40px;
-      background-color: orange; }
+      margin-left: 12px; }
     .container .header #search-input {
       width: 350px;
       height: 40px;
@@ -66,7 +65,9 @@ body {
           cursor: pointer; }
           .container .container-body .side-list .item-list .item .title {
             color: #0071bc;
-            height: 40px; }
+            height: 32px;
+            overflow-y: hidden;
+            margin-bottom: 8px; }
           .container .container-body .side-list .item-list .item .author {
             font-size: 11px;
             color: #333;

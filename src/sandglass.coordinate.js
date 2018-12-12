@@ -130,8 +130,7 @@ Plane.prototype = {
 
     if(!_.isNil(searchedThesisId))
       this.searchedThesisId = searchedThesisId;
-    console.log('searchedThesisId!!!', searchedThesisId);
-    console.log('searchedThesisId,,,', this.searchedThesisId);
+
     d3.forceSimulation(nodes)
       .force('charge', d3.forceManyBody().strength(10))
       .force('center', d3.forceCenter(this.origin.x + x, y))
@@ -147,17 +146,11 @@ Plane.prototype = {
           .attr("fill", color)
           .attr("opacity", .4).
           on('click', async () => {
-            /* 컨벡스헐 클릭하면
-            groups 변수에 그룹들 id 배열로 저장 */
             const group = _.map(nodes, e => e._id);
             const groupSearchedThesisContained = _.cloneDeep(group);
             groupSearchedThesisContained.push(this.searchedThesisId);
-            // console.log(group);
-            console.log('groupSearchedThesisContained', groupSearchedThesisContained);
 
-            // if (첫번째 뎁스인지) group.push();
             const representativeThesis = (await axios.post('http://dblp.ourguide.xyz/papers/representative', {group: groupSearchedThesisContained})).data;
-            // console.log('representativeThesis', representativeThesis._id);
             sideViewManager.makeView(group,
                 representativeThesis._id,
                 color);

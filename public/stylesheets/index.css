@@ -14,10 +14,9 @@ body {
     width: 100%;
     height: 60px;
     align-items: center; }
-    .container .header .logo {
+    .container .header .empty .logo {
       width: 40px;
-      height: 40px;
-      background-color: rebeccapurple; }
+      margin-left: 12px; }
     .container .header .search-input {
       width: 350px;
       height: 40px;

@@ -46,7 +46,9 @@ const sandglass = (async function() {
 
   const main = new Plane(d3.select('#main'));
 
-  this.init = function (year) {
+  this.renderBackground = function () {
+    const year = target.self.year;
+
     const padding = 30;
     const num = 31;
     const diff = (main.height- 2*padding) / (num-1);
@@ -75,8 +77,20 @@ const sandglass = (async function() {
 
   let list = {}; //(await axios.get('http://dblp.ourguide.xyz/papers/f14df1ed-e3e9-4348-9040-fc06e3411b95/ancestor')).data;
 
-  this.update = function () {
+  this.update = async function (id) {
+    target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
 
+    target.parents = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
+      params: {
+        value: 3
+      }
+    })).data.group).groupBy('year').value();
+
+    target.offsprings = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
+      params: {
+        value: 7
+      }
+    })).data.group).groupBy('year').value();
   };
 
   this.renderGroup = function() {
@@ -144,29 +158,8 @@ const sandglass = (async function() {
           item.addEventListener('click', async function (event) {
             const id = this.getAttribute('id');
 
-            target.self = (await axios.get(`http://dblp.ourguide.xyz/papers/${id}/info`)).data;
-
-            target.parents = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/ancestor`,{
-              params: {
-                value: 3
-              }
-            })).data.group).map(e => {
-              e.group = currentGroup;
-              return e;
-            }).groupBy('year').value();
-
-            currentGroup++;
-            target.offsprings = _.chain((await axios.get(`http://dblp.ourguide.xyz/papers/${id}/offspring`,{
-              params: {
-                value: 7
-              }
-            })).data.group).map(e => {
-              e.group = currentGroup;
-              return e;
-            }).groupBy('year').value();
-
-            that.init(target.self.year);
-            that.update();
+            await that.update(id);
+            that.renderBackground(target.self.year);
             that.render();
           });
         });
