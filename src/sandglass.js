@@ -92,7 +92,8 @@ const sandglass = (async function() {
 
       if (i%5==0) {
         if (nodes.length >= 1) {
-          main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0]);
+          console.log('target : ', target);
+          main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year - i+3], colorMap[0], target.self._id);
           main.drawLine({x:0, y:main.mappingY[target.self.year]-15},{x:0, y:main.mappingY[target.self.year - i+3]},{strokeWidth: 10, color:colorMap[0]});
         }
         nodes = [];
