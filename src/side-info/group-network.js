@@ -64,7 +64,7 @@ class NetworkManager {
                         from: edge.from,
                         to: edge.to,
                         length: 150 + 250 * ((maxEdgeValue - edge.value) / diffMinMaxEdgeValue),
-                        width: 1 + 5 * ((maxEdgeValue - edge.value) / diffMinMaxEdgeValue)
+                        width: 6 - 5 * ((maxEdgeValue - edge.value) / diffMinMaxEdgeValue)
                     }
                 })
             );
