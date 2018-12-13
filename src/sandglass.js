@@ -101,16 +101,6 @@ const sandglass = (async function() {
     })).data.group;
 
     target.offsprings = _.groupBy(tmp, 'year');
-
-    const ccId = _.orderBy(tmp,'result','desc')[0]._id;
-
-    tmp = (await axios.get(`http://dblp.ourguide.xyz/papers/${ccId}/offspring`,{
-      params: {
-        value: 1
-      }
-    })).data.group;
-
-    target.cc = _.groupBy(tmp, 'year');
   };
 
   this.render = function (x) {
@@ -141,24 +131,6 @@ const sandglass = (async function() {
         if (nodes.length >= 1) {
           main.drawForceSimulation(nodes, 0, main.mappingY[target.self.year + i-2], colorMap[2]);
           main.drawLine({x:0, y:main.mappingY[target.self.year]+15},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[2]});
-        }
-
-        nodes = [];
-      }
-
-      _.forEach(yearGroup, e=> {
-        nodes.push(e);
-      });
-    }
-
-    nodes = [];
-    for (let i=1; i<=15; i++) {
-      const yearGroup  = target.cc[target.self.year + i];
-
-      if (i%5==0) {
-        if (nodes.length >= 1) {
-          main.drawForceSimulation(nodes, 200, main.mappingY[target.self.year + i-2], colorMap[3]);
-          //main.drawLine({x:200, y:main.mappingY[target.self.year]+15},{x:0, y:main.mappingY[target.self.year + i-2]},{strokeWidth: 10, color: colorMap[3]});
         }
 
         nodes = [];
