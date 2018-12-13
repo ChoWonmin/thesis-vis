@@ -2,7 +2,7 @@
 .DS_STORE
 
 ## data
-src/data/*.json
+#src/data/*.json
 src/analyze/*.json
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm

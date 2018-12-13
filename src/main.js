@@ -209,10 +209,6 @@ _.forEach(roots_bottomUp, e => { // leaf
   genTreeByBottomUp(e);
 });
 
-collide(35);
+collide(30);
 render();
 
-console.log(roots_bottomUp.length);
-console.log(roots_topDown.length);
-console.log(target);
-console.log(Object.keys(target).length);
