@@ -1,5 +1,24 @@
 # thesis-vis
 
+## 학술 문헌 인용 계보 내 피인용지수를 이용한 참고문헌 탐색 인터페이스 제안
+
+![](./reference/HCI001.jpeg)
+![](./reference/HCI002.jpeg)
+![](./reference/HCI003.jpeg)
+![](./reference/HCI004.jpeg)
+![](./reference/HCI005.jpeg)
+![](./reference/HCI006.jpeg)
+![](./reference/HCI007.jpeg)
+![](./reference/HCI008.jpeg)
+![](./reference/HCI009.jpeg)
+![](./reference/HCI010.jpeg)
+![](./reference/HCI011.jpeg)
+![](./reference/HCI012.jpeg)
+![](./reference/HCI013.jpeg)
+
+---
+## 학술 문헌 인용 계보 내 피인용지수를 이용한 참고문헌 탐색 인터페이스 제안 (1안)
+
 ![alt text](https://firebasestorage.googleapis.com/v0/b/myblog-51443.appspot.com/o/posts%2Fthesis001.jpeg?alt=media&token=158af04c-ec66-4ac3-96a6-494ded484152)
 ![alt text](https://firebasestorage.googleapis.com/v0/b/myblog-51443.appspot.com/o/posts%2Fthesis002.jpeg?alt=media&token=9d57d399-1944-4edd-81f1-0bf9d8b5a769)
 ![alt text](https://firebasestorage.googleapis.com/v0/b/myblog-51443.appspot.com/o/posts%2Fthesis003.jpeg?alt=media&token=aa46093e-6000-47d6-97b4-d56791c9785f)
